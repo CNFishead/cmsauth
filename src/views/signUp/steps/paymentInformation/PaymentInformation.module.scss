@@ -1,0 +1,34 @@
+@import '../../../../globals.scss';
+.paymentHeader {
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 20px;
+  background-color: $primary-color;
+  color: white;
+  border-radius: 5px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+}
+.container {
+  .header {
+    color: black !important;
+    font-size: 20px !important;
+    margin: 40px 0 20px 0;
+  }
+  .paymentMethodButton {
+    background-color: white;
+    padding: 40px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+}

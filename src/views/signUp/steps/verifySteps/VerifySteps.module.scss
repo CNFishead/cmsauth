@@ -1,0 +1,66 @@
+@import '../../../../globals.scss';
+
+.container {
+  margin-top: 20px;
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    .step {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      .top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        // gap: 10px;
+
+        .titleContainer {
+          display: flex;
+          align-items: center;
+
+          .iconNumber {
+            color: #ffffff;
+            margin-right: 10px;
+            background-color: $primary-color;
+            border-radius: 50%;
+            // padding: 10px;
+            text-align: center;
+            min-width: 30px;
+            min-height: 30px;
+            max-width: 30px;
+            max-height: 30px;
+            font-size: 1.3rem;
+          }
+          .title {
+            font-weight: 600;
+            margin-right: 10px;
+            font-size: 1.6rem;
+
+            @include mobile {
+              font-size: 1.3rem;
+            }
+          }
+        }
+
+        .icon {
+          font-size: 2rem;
+          font-weight: 900;
+          color: $primary-color;
+        }
+      }
+
+      .description {
+        font-size: 1rem;
+        background-color: rgb(244, 246, 251);
+        padding: 15px;
+        border-radius: 10px;
+
+        @include mobile {
+          font-size: 0.8rem;
+        }
+      }
+    }
+  }
+}

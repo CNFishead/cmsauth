@@ -1,0 +1,62 @@
+@import '../../globals.scss';
+
+.wrapper {
+  max-height: 99dvh;
+
+  display: grid;
+  grid-template-rows: 1fr 100px;
+  grid-template-columns: 1fr;
+  @include mobile {
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr;
+  }
+  width: 100%;
+}
+.step {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  // background-color: white;
+  // border-radius: 10px;
+  // padding: 3px;
+  // flex-direction: column;
+  color: $quaternary-color;
+}
+.buttons {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+
+  @include mobile {
+    flex-direction: column-reverse;
+    justify-content: center;
+    width: 100%;
+  }
+
+  gap: 20px;
+}
+.stepsContainer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  // width: fit-content;
+  overflow-y: scroll;
+  // height: 100px;
+  background-color: $secondary-color-lighter;
+  border-top: 1px solid $primary-color-darker;
+  box-shadow: rgba(204, 219, 232, 0) 3px 3px 6px 0px inset,
+    rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+  // change the background to a linear gradient
+  background: linear-gradient(
+    90deg,
+    $primary-color-darker 0%,
+    $secondary-color 50%,
+    $primary-color 100%
+  );
+  padding: 40px 40px;
+
+  @include mobile {
+    display: none;
+  }
+}

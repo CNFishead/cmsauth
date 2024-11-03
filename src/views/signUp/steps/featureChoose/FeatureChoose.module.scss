@@ -1,0 +1,53 @@
+@import '../../../../globals.scss';
+.container {
+  .features {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: $primary-color-lighter;
+    width: 100%;
+    margin-top: 40px;
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .pricingContainer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    flex-direction: column;
+    .price {
+      gap: 10px;
+      margin-top: 20px;
+      padding-top: 20px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-end;
+
+      // border-top: 2px solid $primary-color;
+
+      .total {
+        font-weight: 600;
+        font-size: 20px;
+
+        color: $accent-color-dark;
+      }
+      .totalPrice {
+        font-weight: 900;
+        font-size: 20px;
+
+        color: $primary-color;
+      }
+
+      .checkoutBtn {
+        // width: 100%;
+        margin: 30px 0;
+      }
+    }
+    .freeTrialText {
+      font-size: 15px;
+      font-weight: 700;
+      color: $accent-color-dark;
+    }
+  }
+}
