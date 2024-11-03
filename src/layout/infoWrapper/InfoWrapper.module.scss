@@ -1,6 +1,9 @@
 @use "@/styles/globals.scss" as *;
 .container {
   padding: 40px 100px;
+  //stretch to the bottom
+  height: 100%;
+  z-index: 0;
 
   @include mobile {
     padding: 20px 40px;
@@ -10,10 +13,6 @@
     align-items: center;
     flex-direction: column;
   }
-
-  //stretch to the bottom
-  height: 100%;
-  z-index: 0;
 
   a {
     color: var(--primary);

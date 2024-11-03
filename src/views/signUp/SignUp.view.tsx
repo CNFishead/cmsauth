@@ -1,17 +1,13 @@
 "use client";
 import styles from "./SignUp.module.scss";
-import { Button, Empty, Modal, Steps, message } from "antd";
+import { Button, Empty, Steps, message } from "antd";
 import { BsBox } from "react-icons/bs";
-import { CgProfile } from "react-icons/cg";
-import { MdOutlinePayments } from "react-icons/md";
 import { useInterfaceStore } from "@/state/interface";
 import { SignUpStep } from "@/types/signUpSteps";
 import UserInformationForm from "./steps/userInformation/UserInformationForm.component";
 import { AiOutlineCheckCircle, AiOutlineUser } from "react-icons/ai";
 import { AnimatePresence, motion } from "framer-motion";
-import PaymentInformation from "./steps/paymentInformation/PaymentInformation.component";
 import ProfileInformationForm from "./steps/profileInformation/ProfileInformationForm.component";
-import { useSignUpFree, useSignUpPaid } from "@/state/serverState/auth";
 import Loader from "@/components/loader/Loader.component";
 import VerifySteps from "./steps/verifySteps/VerifySteps.component";
 import VerifyEmail from "./steps/verifyEmail/VerifyEmail.component";
@@ -19,14 +15,10 @@ import { useUserStore } from "@/state/user";
 import MainWrapper from "@/layout/mainWrapper/MainWrapper.layout";
 import InfoWrapper from "@/layout/infoWrapper/InfoWrapper.layout";
 import { validateForm } from "@/utils/validateForm";
-import BuisnessInformation from "./steps/businessInformation/BuisnessInformation.form";
-import BusinessLogoUpload from "./steps/businessLogoUpload/BusinessLogoUpload.form";
-import usePostData from "@/state/usePostData";
 import { encryptData } from "@/utils/encryptData";
 import { usePartnerStore } from "@/state/partner";
-import useFetchData from "@/state/useFetchData";
-import { useEffect } from "react";
-import UserType from "@/types/UserType";
+import { useEffect, useState } from "react";
+import useApiHook from "@/state/useApi";
 type Props = {};
 
 const SignUpView = (props: Props) => {
@@ -38,20 +30,25 @@ const SignUpView = (props: Props) => {
     currentForm,
     signUpUserFormValues,
     setSignUpUserFormValues,
+    addError,
+    errors,
   } = useInterfaceStore((state) => state);
-  // const { mutate: registerMerchant } = usePostData({
-  //   url: "/auth/register",
-  //   key: "registerMerchant",
-  // });
+  const [registerMerchantLoading, setRegisterMerchantLoading] = useState(false);
+  const { mutate: registerMerchant } = useApiHook({
+    url: "/auth/register",
+    key: "registerMerchant",
+    method: "POST",
+  }) as any;
   const { partner: agentSlug, setBranding } = usePartnerStore((state) => state);
 
   const { user } = useUserStore((state) => state);
 
-  // const { data: merchantData, isLoading: merchantDataLoading } = useFetchData({
-  //   url: `/merchant/services/${agentSlug}`,
-  //   key: ["merchantData", agentSlug!],
-  //   refetchOnWindowFocus: true,
-  // });
+  const { data: merchantData } = useApiHook({
+    url: `/merchant/services/${agentSlug}`,
+    key: ["merchantData", agentSlug!],
+    refetchOnWindowFocus: true,
+    method: "GET",
+  }) as any;
 
   const signUpSteps: {
     [key: number]: SignUpStep;
@@ -74,7 +71,9 @@ const SignUpView = (props: Props) => {
             userInfo: currentForm.getFieldsValue(),
           });
           advanceToNextSignUpStep();
-        } else message.error("Please complete the form before continuing");
+        } else {
+          addError({ message: "Please complete the form before continuing", type: "error" });
+        }
       },
     },
     1: {
@@ -91,12 +90,14 @@ const SignUpView = (props: Props) => {
         if (await validateForm(currentForm)) {
           setSignUpUserFormValues({
             ...signUpUserFormValues,
-            businessInfo: currentForm.getFieldsValue(),
+            ministryInfo: currentForm.getFieldsValue(),
           });
           advanceToNextSignUpStep();
-        } else message.error("Please complete the form before continuing");
+        } else {
+          addError({ message: "Please complete the form before continuing", type: "error" });
+        };
       },
-    }, 
+    },
     3: {
       id: 1,
       isHiddenOnSteps: true,
@@ -107,12 +108,18 @@ const SignUpView = (props: Props) => {
       nextButtonDisabled: false,
       hideBackButton: false,
       nextButtonAction: () => {
-        // registerMerchant(
-        //   {
-        //     data: encryptData(JSON.stringify({ ...signUpUserFormValues, agentCode: agentSlug })),
-        //   },
-        //   { onSuccess: () => advanceToNextSignUpStep() }
-        // );
+        setRegisterMerchantLoading(true);
+        registerMerchant(
+          {
+            data: encryptData(JSON.stringify({ ...signUpUserFormValues, agentCode: agentSlug })),
+          },
+          {
+            onSuccess: () => {
+              advanceToNextSignUpStep();
+              setRegisterMerchantLoading(false);
+            },
+          }
+        );
       },
     },
     4: {
@@ -145,40 +152,40 @@ const SignUpView = (props: Props) => {
     ]
   );
 
-  // if (registerMerchantLoading)
-  //   return (
-  //     <div className={styles.wrapper}>
-  //       <div className={styles.auth}>
-  //         <MainWrapper
-  //           title={"Creating Account"}
-  //           description={"Please wait while we create your account. This may take a few moments..."}
-  //         >
-  //           <Loader />
-  //         </MainWrapper>
-  //       </div>
-  //     </div>
-  //   );
+  if (registerMerchantLoading)
+    return (
+      <div className={styles.wrapper}>
+        <div className={styles.auth}>
+          <MainWrapper
+            title={"Creating Account"}
+            description={"Please wait while we create your account. This may take a few moments..."}
+          >
+            <Loader />
+          </MainWrapper>
+        </div>
+      </div>
+    );
 
-  // if (!merchantData?.payload && agentSlug) {
-  //   return (
-  //     <div className={styles.wrapper}>
-  //       <div className={styles.auth}>
-  //         <MainWrapper
-  //           title={"Error Finding Merchant Data"}
-  //           description={
-  //             "We could not find the merchant data for this partner. Please contact support, or check that the link to the partner is correct."
-  //           }
-  //         >
-  //           <Empty
-  //             // use a warning icon
-  //             image={Empty.PRESENTED_IMAGE_DEFAULT}
-  //             description={""}
-  //           />
-  //         </MainWrapper>
-  //       </div>
-  //     </div>
-  //   );
-  // }
+  if (!merchantData?.payload && agentSlug) {
+    return (
+      <div className={styles.wrapper}>
+        <div className={styles.auth}>
+          <MainWrapper
+            title={"Error Finding Merchant Data"}
+            description={
+              "We could not find the merchant data for this partner. Please contact support, or check that the link to the partner is correct."
+            }
+          >
+            <Empty
+              // use a warning icon
+              image={Empty.PRESENTED_IMAGE_DEFAULT}
+              description={""}
+            />
+          </MainWrapper>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className={styles.wrapper}>
       <AnimatePresence initial={true} mode="wait">

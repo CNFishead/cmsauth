@@ -4,9 +4,6 @@
   box-shadow: rgba(rgb($primary-color-darker-rgb), 0.25) 0px 30px 60px -12px inset,
     rgba(0, 0, 0, 0.8) 0px 18px 36px -18px inset;
   overflow: hidden;
-  @include mobile {
-    display: none;
-  }
   height: 100%;
   width: 100%;
 
@@ -15,6 +12,9 @@
   justify-content: center;
   flex-direction: column;
   position: relative;
+  @include mobile {
+    display: none;
+  }
   // add a full screen gradient with the secondary and quaternary colors
   &::before {
     pointer-events: none;
@@ -88,7 +88,7 @@
       font-size: 40px;
       font-weight: 600;
       span {
-        color: $quaternary-color;
+        color: $primary-color;
         font-weight: 900;
         text-shadow: 0px 0px 10px rgba(255, 255, 255, 0.5);
         @extend .gradient-text;

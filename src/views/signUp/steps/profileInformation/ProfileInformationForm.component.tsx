@@ -1,6 +1,6 @@
 import axios from "@/utils/axios";
 import { Form, Input, Radio, Select, Button, InputNumber } from "antd";
-import styles from "./ProfileInformationForm.module.scss";
+import styles from "@/styles/Form.module.scss";
 import { useInterfaceStore } from "@/state/interface";
 import { useEffect } from "react";
 import phoneNumber from "@/utils/phoneNumber";

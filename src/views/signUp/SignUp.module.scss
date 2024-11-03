@@ -1,16 +1,20 @@
 @use "@/styles/globals.scss" as *;
 
 .wrapper {
-  max-height: 99dvh;
-
-  display: grid;
-  grid-template-rows: 1fr 100px;
-  grid-template-columns: 1fr;
+  // max-height: 99dvh;
+  // display: grid;
+  // grid-template-rows: 1fr 100px;
+  // grid-template-columns: 1fr;
+  position: relative;
+  overflow-y: scroll;
+  width: 100%;
   @include mobile {
     grid-template-rows: 1fr;
     grid-template-columns: 1fr;
   }
-  width: 100%;
+
+  .auth {
+  }
 }
 .step {
   display: flex;
@@ -24,20 +28,18 @@
   justify-content: flex-start;
   flex-wrap: wrap;
 
+  gap: 20px;
   @include mobile {
     flex-direction: column-reverse;
     justify-content: center;
     width: 100%;
   }
-
-  gap: 20px;
 }
 .stepsContainer {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  // width: fit-content;
-  overflow-y: scroll;
+  // overflow-y: scroll;
   // height: 100px;
   background-color: $secondary-light;
   border-top: 1px solid $primary-dark;

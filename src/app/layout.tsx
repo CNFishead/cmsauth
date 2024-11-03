@@ -3,6 +3,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import DynamicTitleUpdater from "@/layout/dynamicTitleUpdater/DynamicTitleUpdater.layout";
+import AuthPage from "@/layout/authPage/AuthPage.layout";
+import Errors from "@/layout/errors/Errors.layout";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -34,8 +36,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <Errors />
         <DynamicTitleUpdater baseTitle="Shepherds CMS" />
-        <ReactQueryProvider>{children}</ReactQueryProvider>
+        <ReactQueryProvider>
+          <AuthPage>{children}</AuthPage>
+        </ReactQueryProvider>
       </body>
     </html>
   );

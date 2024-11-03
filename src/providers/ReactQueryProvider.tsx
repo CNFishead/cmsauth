@@ -6,14 +6,16 @@ import { ConfigProvider, message } from "antd";
 import { default as themeOverride } from "@/styles/theme.json";
 import { Router } from "next/router";
 import NProgress from "nprogress"; //nprogress module
+import { useInterfaceStore } from "@/state/interface";
 
 function ReactQueryProvider({ children }: React.PropsWithChildren) {
+  const { addError } = useInterfaceStore((state) => state);
   const [client] = useState(
     new QueryClient({
       queryCache: new QueryCache({
         onError: (error) => {
-          console.log(error);
-          message.error(error as any);
+          // console.log(error);
+          addError({ type: "error", message: error.message });
         },
       }),
     })

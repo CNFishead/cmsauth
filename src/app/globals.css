@@ -45,13 +45,6 @@ a {
   }
 }
 
-.customDayCell, .rbc-day-bg{
-  height: 100%;
-  width: 100%;
-}
-.rbc-day-bg:hover{
-  background-color: var(--quaternary-light);
-}
 .waveWrapper {
   overflow: hidden;
   position: absolute;

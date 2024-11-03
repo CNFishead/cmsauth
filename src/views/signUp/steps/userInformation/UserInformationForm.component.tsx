@@ -15,7 +15,21 @@ const UserInformationForm = () => {
   }, []);
 
   return (
-    <Form className={styles.form} initialValues={{ sex: "male" }} layout="vertical" form={form}>
+    <Form
+      className={styles.form}
+      initialValues={{
+        firstName: "John",
+        lastName: "Doe",
+        email: "cnfishead@gmail.com",
+        username: "cnfishead",
+        password: "Password10",
+        confirmPassword: "Password10",
+        phoneNumber: "123-456-7890",
+        sex: "male",
+      }}
+      layout="vertical"
+      form={form}
+    >
       <div className={styles.group}>
         <Form.Item
           name="firstName"
@@ -25,6 +39,15 @@ const UserInformationForm = () => {
             {
               required: true,
               message: "Please enter your first name",
+            },
+            // trim
+            {
+              validator(_, value) {
+                if (value.trim() === "") {
+                  return Promise.reject("First name cannot be empty");
+                }
+                return Promise.resolve();
+              },
             },
           ]}
         >
@@ -39,6 +62,14 @@ const UserInformationForm = () => {
             {
               required: true,
               message: "Please enter your last name",
+            },
+            {
+              validator(_, value) {
+                if (value.trim() === "") {
+                  return Promise.reject("Last name cannot be empty");
+                }
+                return Promise.resolve();
+              },
             },
           ]}
         >
@@ -107,7 +138,15 @@ const UserInformationForm = () => {
               required: true,
               message: "Please enter your password",
             },
-
+            {
+              // trim
+              validator(_, value) {
+                if (value.trim() === "") {
+                  return Promise.reject("Password cannot be empty");
+                }
+                return Promise.resolve();
+              },
+            },
             {
               min: 10,
             },

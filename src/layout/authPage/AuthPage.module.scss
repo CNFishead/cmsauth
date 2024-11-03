@@ -29,14 +29,14 @@
   .container {
     display: grid;
     grid-template-columns: 0.7fr 1fr;
-    @include mobile {
-      grid-template-columns: 1fr;
-    }
     height: 100%;
     overflow: hidden;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     position: relative;
+    @include mobile {
+      grid-template-columns: 1fr;
+    }
 
     .sideContainer {
       position: relative;
@@ -52,6 +52,10 @@
       align-items: center;
       justify-content: flex-start;
       flex-direction: column;
+      box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+      // height: 100%;
+      background-color: white;
+      position: relative;
       .banner {
         position: fixed;
         top: 0px;
@@ -68,12 +72,6 @@
           font-size: 15px;
         }
       }
-
-      box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-      // height: 100%;
-      background-color: white;
-
-      position: relative;
     }
   }
 }
