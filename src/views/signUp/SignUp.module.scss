@@ -1,4 +1,4 @@
-@import '../../globals.scss';
+@use "@/styles/globals.scss" as *;
 
 .wrapper {
   max-height: 99dvh;
@@ -17,10 +17,6 @@
   align-items: center;
   justify-content: center;
   gap: 5px;
-  // background-color: white;
-  // border-radius: 10px;
-  // padding: 3px;
-  // flex-direction: column;
   color: $quaternary-color;
 }
 .buttons {
@@ -43,17 +39,11 @@
   // width: fit-content;
   overflow-y: scroll;
   // height: 100px;
-  background-color: $secondary-color-lighter;
-  border-top: 1px solid $primary-color-darker;
-  box-shadow: rgba(204, 219, 232, 0) 3px 3px 6px 0px inset,
-    rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+  background-color: $secondary-light;
+  border-top: 1px solid $primary-dark;
+  box-shadow: rgba(204, 219, 232, 0) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
   // change the background to a linear gradient
-  background: linear-gradient(
-    90deg,
-    $primary-color-darker 0%,
-    $secondary-color 50%,
-    $primary-color 100%
-  );
+  background: linear-gradient(90deg, $primary-dark 0%, $secondary 50%, $primary 100%);
   padding: 40px 40px;
 
   @include mobile {

@@ -1,3 +1,13 @@
+import AuthPage from "@/layout/authPage/AuthPage.layout";
+import SignUpView from "@/views/signUp/SignUp.view";
+import { Suspense } from "react";
+
 export default function PageView() {
-  return <div></div>;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AuthPage>
+        <SignUpView />
+      </AuthPage>
+    </Suspense>
+  );
 }

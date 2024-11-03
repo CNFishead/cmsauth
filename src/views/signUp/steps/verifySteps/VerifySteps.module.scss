@@ -1,4 +1,4 @@
-@import '../../../../globals.scss';
+@use "@/styles/globals.scss" as *;
 
 .container {
   margin-top: 20px;
@@ -23,7 +23,7 @@
           .iconNumber {
             color: #ffffff;
             margin-right: 10px;
-            background-color: $primary-color;
+            background-color: $primary;
             border-radius: 50%;
             // padding: 10px;
             text-align: center;
@@ -47,7 +47,7 @@
         .icon {
           font-size: 2rem;
           font-weight: 900;
-          color: $primary-color;
+          color: $primary;
         }
       }
 

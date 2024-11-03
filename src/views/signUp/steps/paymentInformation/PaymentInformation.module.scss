@@ -1,4 +1,4 @@
-@import '../../../../globals.scss';
+@use "@/styles/globals.scss" as *;
 .paymentHeader {
   font-size: 20px;
   font-weight: 600;

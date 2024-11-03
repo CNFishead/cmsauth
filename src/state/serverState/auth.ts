@@ -5,7 +5,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useUserStore } from '../user';
 import { message } from 'antd';
 import { useInterfaceStore } from '../interface';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { usePartnerStore } from '../partner';
 
 const login = async (options: { email: string; password: string }) => {

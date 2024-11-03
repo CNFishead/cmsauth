@@ -1,4 +1,4 @@
-@import '../../globals.scss';
+@use "@/styles/globals.scss" as *;
 .auth {
   .resendSuccess {
     background-color: $primary-color-lighter;
@@ -24,14 +24,14 @@
       color: #000000;
     }
   }
-  .descriptionContainer{
+  .descriptionContainer {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
     gap: 20px;
-    .merchantLink{
+    .merchantLink {
       color: $primary-color;
       font-weight: 700;
       font-size: 1.2rem;

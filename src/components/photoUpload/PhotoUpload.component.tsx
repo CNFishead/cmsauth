@@ -1,3 +1,4 @@
+'use client';
 import { useEffect, useRef, useState } from 'react';
 import { Avatar, Form, Upload, message, FormInstance } from 'antd';
 import type {

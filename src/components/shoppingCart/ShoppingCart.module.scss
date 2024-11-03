@@ -1,4 +1,4 @@
-@import '../../globals.scss';
+@use "@/styles/globals.scss" as *;
 .container {
   color: black;
 
@@ -17,7 +17,7 @@
     &::after {
       pointer-events: none;
       //full screen background image with gradient
-      content: '';
+      content: "";
       position: fixed;
       transition: all 0.3s ease-in-out;
 
@@ -28,11 +28,7 @@
       opacity: 0;
       z-index: -1;
 
-      background: linear-gradient(
-        90deg,
-        rgba($accent-color-dark, 0.5) 0%,
-        rgba($accent-color-dark, 0.5) 100%
-      );
+      // background: linear-gradient(90deg, rgba($accent-color-dark, 0.5) 0%, rgba($accent-color-dark, 0.5) 100%);
     }
 
     &.open {
@@ -46,7 +42,7 @@
   .top {
     margin-bottom: -20px;
     padding-bottom: 30px;
-    background-color: $primary-color;
+    background-color: $primary;
     overflow: hidden;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
@@ -55,7 +51,7 @@
     .title {
       font-size: 20px;
       font-weight: 800;
-      color: $primary-color;
+      color: $primary;
       margin-bottom: 20px;
       width: 100%;
       padding: 10px 20px;
@@ -68,18 +64,18 @@
       align-items: center;
       justify-content: space-between;
       //   margin-bottom: 10px;
-      border-bottom: 2px dotted $primary-color-lighter;
+      border-bottom: 2px dotted $primary-light;
       padding-bottom: 10px;
 
       .featureName {
         font-size: 15px;
         font-weight: 500;
-        color: $accent-color-dark;
+        // color: $accent-color-dark;
       }
       .featurePrice {
         font-size: 15px;
         font-weight: 900;
-        color: $primary-color;
+        color: $primary;
       }
     }
   }
@@ -95,7 +91,7 @@
     box-shadow: rgba(0, 0, 0, 0.4) 0px 30px 90px;
     .icon {
       font-size: 30px;
-      color: $accent-color-dark;
+      // color: $accent-color-dark;
     }
     .info {
       text-align: right;
@@ -110,17 +106,17 @@
         font-weight: 600;
         font-size: 20px;
 
-        color: $accent-color-dark;
+        // color: $accent-color-dark;
 
         span {
           font-weight: 900;
           font-size: 20px;
 
-          color: $primary-color;
+          color: $primary;
           .freeTrialText {
             font-size: 15px;
             font-weight: 700;
-            color: $accent-color-dark;
+            // color: $accent-color-dark;
           }
         }
       }

@@ -1,30 +1,21 @@
-import { Form, Input, InputNumber } from 'antd';
-import styles from './UserInformationForm.module.scss';
-import { useInterfaceStore } from '@/state/interface';
-import { useEffect } from 'react';
-import phoneNumber from '@/utils/phoneNumber';
+import { Form, Input, InputNumber, Select } from "antd";
+import styles from "@/styles/Form.module.scss";
+import { useInterfaceStore } from "@/state/interface";
+import { useEffect } from "react";
+import phoneNumber from "@/utils/phoneNumber";
+import axios from "@/utils/axios";
 
 const UserInformationForm = () => {
   const [form] = Form.useForm();
-  const { signUpUserFormValues, setCurrentForm } = useInterfaceStore(
-    (state) => state
-  );
+  const { signUpUserFormValues, setCurrentForm } = useInterfaceStore((state) => state);
 
   useEffect(() => {
     form.setFieldsValue(signUpUserFormValues.userInfo);
     setCurrentForm(form);
   }, []);
 
-  const onChange = () => {};
-
   return (
-    <Form
-      form={form}
-      onChange={onChange}
-      className={styles.form}
-      initialValues={{ sex: 'male' }}
-      layout="vertical"
-    >
+    <Form className={styles.form} initialValues={{ sex: "male" }} layout="vertical" form={form}>
       <div className={styles.group}>
         <Form.Item
           name="firstName"
@@ -33,7 +24,7 @@ const UserInformationForm = () => {
           rules={[
             {
               required: true,
-              message: 'Please enter your first name',
+              message: "Please enter your first name",
             },
           ]}
         >
@@ -47,7 +38,7 @@ const UserInformationForm = () => {
           rules={[
             {
               required: true,
-              message: 'Please enter your last name',
+              message: "Please enter your last name",
             },
           ]}
         >
@@ -62,15 +53,48 @@ const UserInformationForm = () => {
         rules={[
           {
             required: true,
-            type: 'email',
-            message: 'Please enter a valid email address',
+            type: "email",
+            message: "Please enter a valid email address",
           },
+          () => ({
+            async validator(_, value) {
+              if (value === "") return;
+              // url encode the value
+              const urlEncodedValue = encodeURIComponent(value);
+              const { data } = await axios.get(`/auth/${urlEncodedValue || " "}/email`);
+              if (data.exists === true) {
+                return Promise.reject("Email already exists, please use another email");
+              }
+              return Promise.resolve();
+            },
+          }),
         ]}
       >
-        <Input
-          className={styles.input}
-          placeholder="Enter your email address"
-        />
+        <Input className={styles.input} placeholder="Enter your email address" />
+      </Form.Item>
+
+      <Form.Item
+        name="username"
+        label="Username"
+        rules={[
+          {
+            required: true,
+            pattern: /^[a-zA-Z0-9]+$/,
+            message: "Username cannot contain spaces or special characters",
+          },
+          () => ({
+            async validator(_, value) {
+              if (value === "") return;
+              const { data } = await axios.get(`/auth/${value || " "}/username`);
+              if (data.exists === true) {
+                return Promise.reject("Username already exists");
+              }
+              return Promise.resolve();
+            },
+          }),
+        ]}
+      >
+        <Input className={styles.input} placeholder="Enter your username" />
       </Form.Item>
 
       <div className={styles.group}>
@@ -81,7 +105,7 @@ const UserInformationForm = () => {
           rules={[
             {
               required: true,
-              message: 'Please enter your password',
+              message: "Please enter your password",
             },
 
             {
@@ -89,41 +113,33 @@ const UserInformationForm = () => {
             },
           ]}
         >
-          <Input 
-            className={styles.input}
-            placeholder="Enter your password"
-            type="password"
-          />
+          <Input.Password className={styles.input} placeholder="Enter your password" />
         </Form.Item>
 
         <Form.Item
           name="confirmPassword"
           label="Confirm Password"
           initialValue=""
-          dependencies={['password']}
+          dependencies={["password"]}
           rules={[
             {
               required: true,
-              message: 'Please confirm your password',
+              message: "Please confirm your password",
             },
             {
               min: 10,
             },
             ({ getFieldValue }) => ({
               validator(_, value) {
-                if (!value || getFieldValue('password') === value) {
+                if (!value || getFieldValue("password") === value) {
                   return Promise.resolve();
                 }
-                return Promise.reject('The two passwords do not match');
+                return Promise.reject("The two passwords do not match");
               },
             }),
           ]}
         >
-          <Input
-            className={styles.input}
-            placeholder="Confirm your password"
-            type="password"
-          />
+          <Input.Password className={styles.input} placeholder="Confirm your password" />
         </Form.Item>
       </div>
 
@@ -135,24 +151,33 @@ const UserInformationForm = () => {
           rules={[
             {
               required: true,
-              message: 'Please enter your phone number',
+              message: "Please confirm your password",
             },
           ]}
         >
           <InputNumber
-            className={styles.input}
-            formatter={(value: any) => phoneNumber(value)}
-            parser={(value: any) => value.replace(/[^\d]/g, '')}
+            style={{ width: "100%" }}
             controls={false}
-            placeholder="Enter your phone number"
+            formatter={(value: any) => {
+              const phoneNumber = value.replace(/[^\d]/g, "");
+              const phoneNumberLength = phoneNumber.length;
+              if (phoneNumberLength < 4) {
+                return phoneNumber;
+              } else if (phoneNumberLength < 7) {
+                return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`;
+              }
+              return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
+            }}
+            parser={(value: any) => value.replace(/[^\d]/g, "")}
+            placeholder="Enter Phone Number"
           />
         </Form.Item>
 
-        <Form.Item name="sex" label="Sex">
-          <select className={styles.input} placeholder="Select your sex">
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
+        <Form.Item name="sex" label="Sex" initialValue="male">
+          <Select className={styles.input} placeholder="Select your sex">
+            <Select.Option value="male">Male</Select.Option>
+            <Select.Option value="female">Female</Select.Option>
+          </Select>
         </Form.Item>
       </div>
     </Form>

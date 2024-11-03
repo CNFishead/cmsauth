@@ -1,4 +1,4 @@
-@import '../../../../globals.scss';
+@use "@/styles/globals.scss" as *;
 .container {
   display: flex;
   align-items: flex-start;
@@ -34,7 +34,7 @@
     .icon {
       font-size: 40px;
       font-weight: 900;
-      color: $primary-color;
+      color: $primary;
       // width: 100%;
     }
   }
