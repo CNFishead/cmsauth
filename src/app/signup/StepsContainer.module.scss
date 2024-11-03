@@ -1,0 +1,29 @@
+@use "@/styles/globals.scss" as *;
+
+.stepsContainer {
+  display: flex;
+  // pin to the bottom
+  justify-content: flex-end;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  // overflow-y: scroll;
+  // height: 100px;
+  background-color: $secondary-light;
+  border-top: 1px solid $primary-dark;
+  box-shadow: rgba(204, 219, 232, 0) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+  // // change the background to a linear gradient
+  background: linear-gradient(90deg, $primary-dark 0%, $secondary 50%, $primary 100%);
+  padding: 40px 40px;
+
+  @include mobile {
+    display: none;
+  }
+  .step {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    color: $quaternary-color;
+  }
+}

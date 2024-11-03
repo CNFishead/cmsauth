@@ -8,20 +8,17 @@
   position: relative;
   overflow-y: scroll;
   width: 100%;
+  flex: 1;
   @include mobile {
     grid-template-rows: 1fr;
     grid-template-columns: 1fr;
   }
 
   .auth {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
   }
-}
-.step {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  color: $quaternary-color;
 }
 .buttons {
   display: flex;
@@ -33,22 +30,5 @@
     flex-direction: column-reverse;
     justify-content: center;
     width: 100%;
-  }
-}
-.stepsContainer {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  // overflow-y: scroll;
-  // height: 100px;
-  background-color: $secondary-light;
-  border-top: 1px solid $primary-dark;
-  box-shadow: rgba(204, 219, 232, 0) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
-  // change the background to a linear gradient
-  background: linear-gradient(90deg, $primary-dark 0%, $secondary 50%, $primary 100%);
-  padding: 40px 40px;
-
-  @include mobile {
-    display: none;
   }
 }

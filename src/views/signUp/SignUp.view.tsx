@@ -1,6 +1,6 @@
 "use client";
 import styles from "./SignUp.module.scss";
-import { Button, Empty, Steps, message } from "antd";
+import { Button, Empty, Modal, Steps, message } from "antd";
 import { BsBox } from "react-icons/bs";
 import { useInterfaceStore } from "@/state/interface";
 import { SignUpStep } from "@/types/signUpSteps";
@@ -17,8 +17,10 @@ import InfoWrapper from "@/layout/infoWrapper/InfoWrapper.layout";
 import { validateForm } from "@/utils/validateForm";
 import { encryptData } from "@/utils/encryptData";
 import { usePartnerStore } from "@/state/partner";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import useApiHook from "@/state/useApi";
+import BusinessLogoUpload from "./steps/businessLogoUpload/BusinessLogoUpload.form";
+import { CgProfile } from "react-icons/cg";
 type Props = {};
 
 const SignUpView = (props: Props) => {
@@ -31,7 +33,8 @@ const SignUpView = (props: Props) => {
     signUpUserFormValues,
     setSignUpUserFormValues,
     addError,
-    errors,
+    setSteps,
+    steps,
   } = useInterfaceStore((state) => state);
   const [registerMerchantLoading, setRegisterMerchantLoading] = useState(false);
   const { mutate: registerMerchant } = useApiHook({
@@ -39,118 +42,139 @@ const SignUpView = (props: Props) => {
     key: "registerMerchant",
     method: "POST",
   }) as any;
-  const { partner: agentSlug, setBranding } = usePartnerStore((state) => state);
-
-  const { user } = useUserStore((state) => state);
+  const { partner: partnerSlug, setBranding } = usePartnerStore((state) => state);
 
   const { data: merchantData } = useApiHook({
-    url: `/merchant/services/${agentSlug}`,
-    key: ["merchantData", agentSlug!],
-    refetchOnWindowFocus: true,
+    url: `/partner/${partnerSlug}`,
+    key: ["merchantData", partnerSlug!],
     method: "GET",
   }) as any;
 
-  const signUpSteps: {
-    [key: number]: SignUpStep;
-  } = {
-    0: {
-      id: 0,
-      title: "User Info",
-      component: <UserInformationForm />,
-      nextButtonText: "Next",
-      headerText: "We're excited to have you!",
-      subHeaderText:
-        "You're just a few steps away from starting your journey with Pyre! Let's start by getting some information about you.",
-      nextButtonDisabled: false,
-      hideBackButton: true,
-      icon: <AiOutlineUser />,
-      nextButtonAction: async () => {
-        if (await validateForm(currentForm)) {
-          setSignUpUserFormValues({
-            ...signUpUserFormValues,
-            userInfo: currentForm.getFieldsValue(),
-          });
-          advanceToNextSignUpStep();
-        } else {
-          addError({ message: "Please complete the form before continuing", type: "error" });
-        }
-      },
-    },
-    1: {
-      id: 1,
-      title: "Ministry Info",
-      component: <ProfileInformationForm />,
-      nextButtonText: "Next",
-      headerText: "Business Information",
-      subHeaderText: "Let us know about your business!",
-      icon: <BsBox />,
-      nextButtonDisabled: false,
-      hideBackButton: false,
-      nextButtonAction: async () => {
-        if (await validateForm(currentForm)) {
-          setSignUpUserFormValues({
-            ...signUpUserFormValues,
-            ministryInfo: currentForm.getFieldsValue(),
-          });
-          advanceToNextSignUpStep();
-        } else {
-          addError({ message: "Please complete the form before continuing", type: "error" });
-        };
-      },
-    },
-    3: {
-      id: 1,
-      isHiddenOnSteps: true,
-      component: <VerifySteps />,
-      nextButtonText: "Send Verification Email",
-      headerText: "Next Steps",
-      subHeaderText: "There are a few verifications steps needed before you can start using your account.",
-      nextButtonDisabled: false,
-      hideBackButton: false,
-      nextButtonAction: () => {
-        setRegisterMerchantLoading(true);
-        registerMerchant(
-          {
-            data: encryptData(JSON.stringify({ ...signUpUserFormValues, agentCode: agentSlug })),
-          },
-          {
-            onSuccess: () => {
-              advanceToNextSignUpStep();
-              setRegisterMerchantLoading(false);
-            },
+  React.useEffect(() => {
+    setSteps({
+      0: {
+        id: 0,
+        title: "User Info",
+        component: <UserInformationForm />,
+        nextButtonText: "Next",
+        headerText: "We're excited to have you!",
+        subHeaderText:
+          "Please fill out the form below to get started. This information is all about you, the account user!",
+        nextButtonDisabled: false,
+        hideBackButton: true,
+        icon: <AiOutlineUser />,
+        nextButtonAction: async () => {
+          if (await validateForm(currentForm)) {
+            setSignUpUserFormValues({
+              ...signUpUserFormValues,
+              userInfo: currentForm.getFieldsValue(),
+            });
+            advanceToNextSignUpStep();
+          } else {
+            addError({ message: "Please complete the form before continuing", type: "error" });
           }
-        );
+        },
       },
-    },
-    4: {
-      id: 1,
-      title: "Verification",
-      isHiddenOnSteps: false,
-      component: <VerifyEmail />,
-      headerText: "Verification Email Sent",
-      subHeaderText: "Please check your email to verify your account to start your free 14-day trial.",
-      icon: <AiOutlineCheckCircle />,
-      hideBackButton: true,
-      hideNextButton: true,
-    },
-  };
+      1: {
+        id: 1,
+        title: "Ministry Info",
+        component: <ProfileInformationForm />,
+        nextButtonText: "Next",
+        headerText: "Ministry Information",
+        subHeaderText: "This is the main ministry, you'll be able to create sub-ministries later on.",
+        icon: <BsBox />,
+        nextButtonDisabled: false,
+        hideBackButton: false,
+        nextButtonAction: async () => {
+          if (await validateForm(currentForm)) {
+            setSignUpUserFormValues({
+              ...signUpUserFormValues,
+              ministryInfo: currentForm.getFieldsValue(),
+            });
+            advanceToNextSignUpStep();
+          } else {
+            addError({ message: "Please complete the form before continuing", type: "error" });
+          }
+        },
+      },
+      2: {
+        id: 1,
+        title: "Ministry banner",
+        component: <BusinessLogoUpload />,
+        nextButtonText: "Next",
+        headerText: "Ministry Banner",
+        isHiddenOnSteps: true,
+        subHeaderText:
+          "Upload a banner for your ministry. This will be displayed to your congregation when checking in.",
+        icon: <CgProfile />,
+        nextButtonDisabled: false,
+        hideBackButton: false,
+        nextButtonAction: () => {
+          Modal.confirm({
+            title: "Public View Notice",
+            content: <p>This information will be visible to the public, are you sure you want to continue?</p>,
+            onOk() {
+              setSignUpUserFormValues({
+                ...signUpUserFormValues,
+                ministryInfo: {
+                  ...signUpUserFormValues.ministryInfo,
+                  ...currentForm.getFieldsValue(),
+                },
+              });
+              advanceToNextSignUpStep();
+            },
+          });
+        },
+      },
+      3: {
+        id: 1,
+        isHiddenOnSteps: true,
+        component: <VerifySteps />,
+        nextButtonText: "Send Verification Email",
+        headerText: "Next Steps",
+        subHeaderText: "There are a few verifications steps needed before you can start using your account.",
+        nextButtonDisabled: false,
+        hideBackButton: false,
+        nextButtonAction: () => {
+          setRegisterMerchantLoading(true);
+          registerMerchant(
+            {
+              data: encryptData(JSON.stringify({ ...signUpUserFormValues, agentCode: partnerSlug })),
+            },
+            {
+              onSuccess: () => {
+                advanceToNextSignUpStep();
+                setRegisterMerchantLoading(false);
+              },
+            }
+          );
+        },
+      },
+      4: {
+        id: 1,
+        title: "Verification",
+        isHiddenOnSteps: false,
+        component: <VerifyEmail />,
+        headerText: "Verification Email Sent",
+        subHeaderText: "Please check your email to verify your account to start your free 14-day trial.",
+        icon: <AiOutlineCheckCircle />,
+        hideBackButton: true,
+        hideNextButton: true,
+      },
+    });
+  }, [currentSignUpStep]);
 
-  useEffect(
-    () => {
-      // set the partner in the partner store
-      // if (merchantData?.payload) {
-      // setBranding({
-      // logo: merchantData?.payload?.businessInfo?.logoUrl,
-      // name: merchantData?.payload?.businessInfo?.name,
-      //   primaryColor: "#000",
-      //   secondaryColor: "#000",
-      // });
-      // }
-    },
-    [
-      // merchantData?.payload
-    ]
-  );
+  useEffect(() => {
+    // set the partner in the partner store
+    if (merchantData?.payload) {
+      setBranding({
+        logo: merchantData?.payload?.businessInfo?.logoUrl,
+        name: merchantData?.payload?.businessInfo?.name,
+        primaryColor: "#000",
+        secondaryColor: "#000",
+      });
+    }
+  }, [merchantData?.payload]);
 
   if (registerMerchantLoading)
     return (
@@ -166,7 +190,7 @@ const SignUpView = (props: Props) => {
       </div>
     );
 
-  if (!merchantData?.payload && agentSlug) {
+  if (!merchantData?.payload && partnerSlug) {
     return (
       <div className={styles.wrapper}>
         <div className={styles.auth}>
@@ -212,62 +236,39 @@ const SignUpView = (props: Props) => {
           key={currentSignUpStep}
         >
           <MainWrapper
-            title={signUpSteps[currentSignUpStep]?.headerText}
-            description={signUpSteps[currentSignUpStep]?.subHeaderText}
+            title={steps[currentSignUpStep]?.headerText}
+            description={steps[currentSignUpStep]?.subHeaderText}
           >
-            {signUpSteps[currentSignUpStep]?.component}
+            {steps[currentSignUpStep]?.component}
           </MainWrapper>
 
           <InfoWrapper links={["login"]}>
             <div className={styles.buttons}>
-              {!signUpSteps[currentSignUpStep]?.hideBackButton && (
+              {!steps[currentSignUpStep]?.hideBackButton && (
                 <Button
                   type="text"
                   className={styles.backButton}
-                  onClick={signUpSteps[currentSignUpStep]?.previousButtonAction || goBackToPreviousSignUpStep}
+                  onClick={steps[currentSignUpStep]?.previousButtonAction || goBackToPreviousSignUpStep}
                 >
                   Back
                 </Button>
               )}
-              {!signUpSteps[currentSignUpStep]?.hideNextButton && (
+              {!steps[currentSignUpStep]?.hideNextButton && (
                 <Button
                   type="primary"
                   onClick={() => {
-                    signUpSteps[currentSignUpStep]?.nextButtonAction!();
+                    steps[currentSignUpStep]?.nextButtonAction!();
                   }}
-                  disabled={signUpSteps[currentSignUpStep]?.nextButtonDisabled}
+                  disabled={steps[currentSignUpStep]?.nextButtonDisabled}
                   className={styles.nextButton}
                 >
-                  {signUpSteps[currentSignUpStep]?.nextButtonText || "Next"}
+                  {steps[currentSignUpStep]?.nextButtonText || "Next"}
                 </Button>
               )}
             </div>
           </InfoWrapper>
         </motion.div>
       </AnimatePresence>
-      <div className={styles.stepsContainer}>
-        <Steps
-          className={styles.steps}
-          current={currentSignUpStep}
-          items={
-            Object.values(signUpSteps)
-              .filter((s) => !s.isHiddenOnSteps)
-              .map((step) => {
-                return {
-                  title: (
-                    <div className={styles.step}>
-                      {/* {step.icon} */}
-                      <span>{step.title || ""}</span>
-                    </div>
-                  ),
-                  // icon: step.icon,
-                  // status: step.id === currentSignUpStep ? 'process' : '',
-                };
-              }) as any
-          }
-          size="small"
-        />
-      </div>
     </div>
   );
 };

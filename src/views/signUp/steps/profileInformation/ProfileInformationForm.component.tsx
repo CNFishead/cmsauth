@@ -17,15 +17,31 @@ const ProfileInformationForm = () => {
   }, []);
 
   return (
-    <Form className={styles.form} layout="vertical">
+    <Form
+      className={styles.form}
+      layout="vertical"
+      initialValues={{
+        name: "Test Ministry",
+        bio: "a reall good ministry biography",
+        address: "123 main st",
+        address2: "",
+        city: "Kansas City",
+        state: "KS",
+        zipCode: "234564",
+        // facebook: "test-ministry",
+        // instagram: "test-insta",
+        // youtube: "test-youtube",
+        // website: "",
+      }}
+    >
       <h1 className={styles.header}>Ministry Information</h1>
 
       <div className={styles.group}>
-        <Form.Item name={["ministry", "name"]} label="Ministry Name" rules={[{ required: true }]}>
+        <Form.Item name={"name"} label="Ministry Name" rules={[{ required: true }]}>
           <Input className={styles.input} />
         </Form.Item>
       </div>
-      <Form.Item name={["ministry", "bio"]} label="Mission Statement">
+      <Form.Item name={"bio"} label="Mission Statement">
         <Input.TextArea className={styles.input} />
       </Form.Item>
       <br />
@@ -33,7 +49,7 @@ const ProfileInformationForm = () => {
 
       <div className={styles.group}>
         <Form.Item
-          name={["ministry", "address"]}
+          name={"address"}
           label="Address"
           rules={[
             {
@@ -43,15 +59,15 @@ const ProfileInformationForm = () => {
         >
           <Input className={styles.input} />
         </Form.Item>
-        <Form.Item name={["ministry", "address2"]} label="Address 2">
+        <Form.Item name={"address2"} label="Address 2">
           <Input className={styles.input} />
         </Form.Item>
       </div>
       <div className={styles.group}>
-        <Form.Item name={["ministry", "city"]} label="City" rules={[{ required: true }]}>
+        <Form.Item name={"city"} label="City" rules={[{ required: true }]}>
           <Input className={styles.input} />
         </Form.Item>
-        <Form.Item name={["ministry", "state"]} label="State" rules={[{ required: true }]}>
+        <Form.Item name={"state"} label="State" rules={[{ required: true }]}>
           <Select
             placeholder="Select a state"
             className={styles.input}
@@ -65,28 +81,28 @@ const ProfileInformationForm = () => {
             ))}
           </Select>
         </Form.Item>
-        <Form.Item name={["ministry", "zipCode"]} label="Zip Code" rules={[{ required: true }]}>
+        <Form.Item name={"zipCode"} label="Zip Code" rules={[{ required: true }]}>
           <Input className={styles.input} />
         </Form.Item>
       </div>
-      <br />
+      {/* <br />
 
       <h1 className={styles.header}>Social Information</h1>
 
       <div className={styles.group}>
-        <Form.Item name={["ministry", "facebook"]} label="Facebook">
+        <Form.Item name={"facebook"} label="Facebook">
           <Input className={styles.input} />
         </Form.Item>
-        <Form.Item name={["ministry", "instagram"]} label="Instagram">
+        <Form.Item name={"instagram"} label="Instagram">
           <Input className={styles.input} />
         </Form.Item>
-        <Form.Item name={["ministry", "youtube"]} label="Youtube">
+        <Form.Item name={"youtube"} label="Youtube">
           <Input className={styles.input} />
         </Form.Item>
-        <Form.Item name={["ministry", "website"]} label="Website">
+        <Form.Item name={"website"} label="Website">
           <Input className={styles.input} />
         </Form.Item>
-      </div>
+      </div> */}
     </Form>
   );
 };

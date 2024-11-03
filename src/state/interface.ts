@@ -19,7 +19,11 @@ type InterfaceState = {
   didSendEmail: boolean;
   recapchaIsVerified: boolean;
   errors: { type: string; message: string; id?: string }[];
+  steps: {
+    [key: number]: SignUpStep;
+  };
 
+  setSteps: (steps: { [key: number]: SignUpStep }) => void;
   setErrors: (errors: any[]) => void;
   addError: (error: { type: string; message: string; id?: string }, timeout?: number) => void;
   removeError: (id: string) => void;
@@ -41,6 +45,10 @@ type InterfaceState = {
 };
 
 export const useInterfaceStore = create<InterfaceState>((set: any, get: any) => ({
+  steps: {},
+  setSteps: (steps: { [key: number]: SignUpStep }) => {
+    set({ steps });
+  },
   errors: [],
   setErrors: (errors: any[]) => set({ errors }),
 
@@ -61,7 +69,7 @@ export const useInterfaceStore = create<InterfaceState>((set: any, get: any) => 
     }));
   },
 
-  currentSignUpStep: 1,
+  currentSignUpStep: 0,
   setCurrentSignUpStep: (step: number) => {
     set({ currentSignUpStep: step });
   },
