@@ -18,13 +18,13 @@ const UserInformationForm = () => {
     <Form
       className={styles.form}
       initialValues={{
-        firstName: "John",
-        lastName: "Doe",
-        email: "cnfishead@gmail.com",
-        username: "cnfishead",
-        password: "Password10",
-        confirmPassword: "Password10",
-        phoneNumber: "123-456-7890",
+        // firstName: "John",
+        // lastName: "Doe",
+        // email: "cnfishead@gmail.com",
+        // username: "cnfishead",
+        // password: "Password10",
+        // confirmPassword: "Password10",
+        // phoneNumber: "123-456-7890",
         sex: "male",
       }}
       layout="vertical"
@@ -212,7 +212,7 @@ const UserInformationForm = () => {
           />
         </Form.Item>
 
-        <Form.Item name="sex" label="Sex" initialValue="male">
+        <Form.Item name="sex" label="Sex">
           <Select className={styles.input} placeholder="Select your sex">
             <Select.Option value="male">Male</Select.Option>
             <Select.Option value="female">Female</Select.Option>

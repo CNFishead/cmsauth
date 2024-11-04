@@ -1,25 +1,23 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
-import axios from '@/utils/axios';
-import { useQueryClient } from '@tanstack/react-query';
-import errorHandler from '@/utils/errorHandler';
-import { message } from 'antd';
+import { useMutation, useQuery } from "@tanstack/react-query";
+import axios from "@/utils/axios";
+import { useQueryClient } from "@tanstack/react-query";
+import errorHandler from "@/utils/errorHandler";
+import { message } from "antd";
 
 export const fetchAllFeatures = async () => {
-  const response = await axios.get(
-    `/admin/features?keyword=&pageNumber=1&partnerid=`
-  );
-  return response.data;
+  const response = await axios.get(`/feature`);
+  return response?.data?.payload;
 };
 
-export const useAllFeatures = (
-  onSuccess?: (data: any) => void,
-  onError?: (error: any) => void
-) => {
-  const query = useQuery(['allFeatures'], () => fetchAllFeatures(), {
-    onSuccess,
-    onError,
+export const useAllFeatures = (onSuccess?: (data: any) => void, onError?: (error: any) => void) => {
+  return useQuery({
+    queryKey: ["allFeatures"],
+    queryFn: () => fetchAllFeatures(),
+    retry: 1,
+    meta: {
+      errorMessage: "An error occurred while fetching data",
+    },
   });
-  return query;
 };
 
 export const updateUserFeatures = async (features: string[]) => {
@@ -29,17 +27,13 @@ export const updateUserFeatures = async (features: string[]) => {
   return response.data;
 };
 
-export const useUpdateUserFeatures = (
-  onSuccess?: (data: any) => void,
-  onError?: (error: any) => void
-) => {
+export const useUpdateUserFeatures = (onSuccess?: (data: any) => void, onError?: (error: any) => void) => {
   const queryClient = useQueryClient();
-  return useMutation((data: string[]) => updateUserFeatures(data), {
+  return useMutation({
+    mutationFn: (data: string[]) => updateUserFeatures(data),
     onSuccess: (data) => {
-      queryClient.invalidateQueries(['user']);
-      message.success(
-        data.message || 'Your features have been updated successfully'
-      );
+      queryClient.invalidateQueries(["user"] as any);
+      message.success(data.message || "Your features have been updated successfully");
       onSuccess && onSuccess(data);
     },
     onError: (error: Error) => {

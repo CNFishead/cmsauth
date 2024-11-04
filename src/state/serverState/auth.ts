@@ -1,12 +1,12 @@
 //Use react-query to fetch data from the server
-import axios from '@/utils/axios';
-import errorHandler from '@/utils/errorHandler';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { useUserStore } from '../user';
-import { message } from 'antd';
-import { useInterfaceStore } from '../interface';
-import { useRouter } from 'next/navigation';
-import { usePartnerStore } from '../partner';
+import axios from "@/utils/axios";
+import errorHandler from "@/utils/errorHandler";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useUserStore } from "../user";
+import { message } from "antd";
+import { useInterfaceStore } from "../interface";
+import { useRouter } from "next/navigation";
+import { usePartnerStore } from "../partner";
 
 const login = async (options: { email: string; password: string }) => {
   //call api
@@ -23,41 +23,30 @@ const login = async (options: { email: string; password: string }) => {
 export const useLogin = () => {
   const { setToken, setUser } = useUserStore((state) => state);
   const router = useRouter();
-  const query = useMutation(
-    (data: any) =>
+  return useMutation({
+    mutationFn: (data: any) =>
       login({
         email: data.email,
         password: data.password,
       }),
-    {
-      onSuccess: (user) => {
-        //set token to local storage
-        setUser(user);
-      },
-      onError: (error: any) => {
-        console.log(error);
+    onSuccess: (user: any) => {
+      //set token to local storage
+      setUser(user);
+    },
+    onError: (error: any) => {
+      console.log(error);
 
-        if (
-          error.response.data.isEmailVerified === false &&
-          error.response.data.isEmailVerified !== null
-        ) {
-          router.push('/resend-verification');
-        }
-        errorHandler(error);
-      },
-    }
-  );
-  return query;
+      if (error.response.data.isEmailVerified === false && error.response.data.isEmailVerified !== null) {
+        router.push("/resend-verification");
+      }
+      errorHandler(error);
+    },
+  });
 };
 
-const signUpFree = async (options: {
-  registrationData: Object;
-  partner: string | undefined;
-}) => { 
+const signUpFree = async (options: { registrationData: Object; partner: string | undefined }) => {
   const { data } = await axios.post(
-    `/auth/register?partnerid=${
-      options.partner ? options.partner : ''
-    }`,
+    `/auth/register?partnerid=${options.partner ? options.partner : ""}`,
 
     options.registrationData
   );
@@ -69,44 +58,41 @@ export const useSignUpFree = () => {
   const { setUser } = useUserStore((state) => state);
   const { partner } = usePartnerStore((state) => state);
 
-  const query = useMutation(
-    (data: { registrationData: Object }) =>
+  return useMutation({
+    mutationFn: (data: { registrationData: Object }) =>
       signUpFree({
         registrationData: data.registrationData,
         partner: partner,
       }),
-    {
-      onSuccess: (user) => {
-        message.success('Account created successfully');
-        setUser(user);
-      },
-      onError: (error) => {
-        console.log(error);
-        errorHandler(error);
-      },
-    }
-  );
-  return query;
+    onSuccess: (user) => {
+      message.success("Account created successfully");
+      setUser(user);
+    },
+    onError: (error) => {
+      console.log(error);
+      errorHandler(error);
+    },
+  });
 };
 
 const signUpPaid = async (options: {
   registrationData: Object;
   features: any;
-  type: 'ach' | 'card';
+  type: "ach" | "card";
   partner: string | undefined;
 }) => {
   var url;
   switch (options.type) {
-    case 'ach':
+    case "ach":
       url = `/auth/register-ach`;
       break;
-    case 'card':
+    case "card":
       url = `/auth/register-cc`;
       break;
   }
 
   const { data } = await axios.post(
-    url + `?partnerid=${options.partner ? options.partner : ''}`,
+    url + `?partnerid=${options.partner ? options.partner : ""}`,
 
     { user: options.registrationData, features: options.features }
   );
@@ -116,17 +102,12 @@ const signUpPaid = async (options: {
 
 export const useSignUpPaid = () => {
   const { setUser } = useUserStore((state) => state);
-  const {
-    paymentMethod,
-    features,
-    signUpUserFormValues,
-    signUpPaymentFormValues,
-    signUpProfileFormValues,
-  } = useInterfaceStore((state) => state);
+  const { paymentMethod, features, signUpUserFormValues, signUpPaymentFormValues, signUpProfileFormValues } =
+    useInterfaceStore((state) => state);
   const { partner } = usePartnerStore((state) => state);
 
-  const query = useMutation(
-    () =>
+  return useMutation({
+    mutationFn: () =>
       signUpPaid({
         registrationData: {
           ...signUpUserFormValues,
@@ -137,18 +118,15 @@ export const useSignUpPaid = () => {
         type: paymentMethod,
         partner: partner,
       }),
-    {
-      onSuccess: (user) => {
-        message.success('Account created successfully');
-        setUser(user);
-      },
-      onError: (error) => {
-        console.log(error);
-        errorHandler(error);
-      },
-    }
-  );
-  return query;
+    onSuccess: (user) => {
+      message.success("Account created successfully");
+      setUser(user);
+    },
+    onError: (error) => {
+      console.log(error);
+      errorHandler(error);
+    },
+  });
 };
 
 const verifyEmail = async (options: { code: string }) => {
@@ -163,32 +141,27 @@ export const useVerifyEmail = () => {
   const { setUser } = useUserStore((state) => state);
   const router = useRouter();
 
-  const query = useMutation(
-    (data: { code: string }) =>
+  return useMutation({
+    mutationFn: (data: { code: string }) =>
       verifyEmail({
         code: data.code,
       }),
-    {
-      onSuccess: (user) => {
-        setUser(user);
-        message.success('Email verified successfully!');
-      },
-      onError: (error: any) => {
-        if (error.response.data.message === 'Invalid token.') {
-          message.error(
-            'It looks like your verification link is invalid or has expired, please request a new one.'
-          );
-          router.push('/resend-verification');
-        }
-      },
-    }
-  );
-  return query;
+    onSuccess: (user) => {
+      setUser(user);
+      message.success("Email verified successfully!");
+    },
+    onError: (error: any) => {
+      if (error.response.data.message === "Invalid token.") {
+        message.error("It looks like your verification link is invalid or has expired, please request a new one.");
+        router.push("/resend-verification");
+      }
+    },
+  });
 };
 
 const resendVerificationEmail = async (options: { email: String }) => {
   //call api
-  const { data } = await axios.post('/auth/resend-verification-email', {
+  const { data } = await axios.post("/auth/resend-verification-email", {
     email: options.email,
   });
 
@@ -198,29 +171,25 @@ const resendVerificationEmail = async (options: { email: String }) => {
 export const useResendVerificationEmail = () => {
   const { setDidSendEmail } = useInterfaceStore((state) => state);
 
-  const query = useMutation(
-    (data: { email: String }) =>
+  return useMutation({
+    mutationFn: (data: { email: String }) =>
       resendVerificationEmail({
         email: data.email,
       }),
-    {
-      onError: (error) => {
-        console.log(error);
-        errorHandler(error);
-      },
-      onSuccess: (data) => {
-        console.log(data);
-        message.success(data.message);
-        setDidSendEmail(true);
-      },
-    }
-  );
-  return query;
+    onSuccess: (data) => {
+      message.success(data.message);
+      setDidSendEmail(true);
+    },
+    onError: (error) => {
+      console.log(error);
+      errorHandler(error);
+    },
+  });
 };
 
 const sendPasswordForgotRequest = async (options: { username: String }) => {
   //call api
-  const { data } = await axios.post('/auth/forgotpassword', {
+  const { data } = await axios.post("/auth/forgotpassword", {
     username: options.username,
   });
 
@@ -230,37 +199,27 @@ const sendPasswordForgotRequest = async (options: { username: String }) => {
 export const useSendPasswordForgotRequest = () => {
   const { setDidSendEmail } = useInterfaceStore((state) => state);
 
-  const query = useMutation(
-    (data: { username: String }) =>
+  return useMutation({
+    mutationFn: (data: { username: String }) =>
       sendPasswordForgotRequest({
         username: data.username,
       }),
-    {
-      onError: (error) => {
-        console.log(error);
-        errorHandler(error);
-      },
-      onSuccess: (data) => {
-        console.log(data);
-        message.success(data.message);
-        setDidSendEmail(true);
-      },
-    }
-  );
-  return query;
+    onSuccess: (data) => {
+      message.success(data.message);
+      setDidSendEmail(true);
+    },
+    onError: (error) => {
+      console.log(error);
+      errorHandler(error);
+    },
+  });
 };
 
-const createNewPassword = async (options: {
-  resetToken: String;
-  password: String;
-}) => {
+const createNewPassword = async (options: { resetToken: String; password: String }) => {
   //call api
-  const { data } = await axios.put(
-    `/auth/resetpassword/${options.resetToken}`,
-    {
-      password: options.password,
-    }
-  );
+  const { data } = await axios.put(`/auth/resetpassword/${options.resetToken}`, {
+    password: options.password,
+  });
 
   return data;
 };
@@ -268,23 +227,20 @@ const createNewPassword = async (options: {
 export const useCreateNewPassword = () => {
   const { setUser } = useUserStore((state) => state);
 
-  const query = useMutation(
-    (data: { resetToken: String; password: String }) =>
+  return useMutation({
+    mutationFn: (data: { resetToken: String; password: String }) =>
       createNewPassword({
         resetToken: data.resetToken,
         password: data.password,
       }),
-    {
-      onError: (error) => {
-        console.log(error);
-        errorHandler(error);
-      },
-      onSuccess: (data) => {
-        console.log(data);
-        message.success(data.message);
-        setUser(data.user);
-      },
-    }
-  );
-  return query;
+    onError: (error) => {
+      console.log(error);
+      errorHandler(error);
+    },
+    onSuccess: (data) => {
+      console.log(data);
+      message.success(data.message);
+      setUser(data.user);
+    },
+  });
 };

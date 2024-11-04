@@ -20,7 +20,7 @@ const FeaturesView = (props: Props) => {
   return (
     <div className={styles.container}>
       <div className={styles.features}>
-        {featuresData?.availableFeatures.map((feature: any) => {
+        {featuresData?.map((feature: any) => {
           return (
             <Feature
               feature={feature}
@@ -44,6 +44,7 @@ const FeaturesView = (props: Props) => {
             /Month
           </h1>
         </div>
+        <p className={styles.subText}>Not including any applicable taxes, if any.</p>
         <p className={styles.freeTrialText}>(After 14 day Free Trial)</p>
       </div>
     </div>

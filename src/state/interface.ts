@@ -69,7 +69,7 @@ export const useInterfaceStore = create<InterfaceState>((set: any, get: any) => 
     }));
   },
 
-  currentSignUpStep: 0,
+  currentSignUpStep: 3,
   setCurrentSignUpStep: (step: number) => {
     set({ currentSignUpStep: step });
   },

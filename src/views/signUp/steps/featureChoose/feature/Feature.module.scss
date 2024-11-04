@@ -1,4 +1,4 @@
-@import '../../../../../globals.scss';
+@use "@/styles/globals.scss" as *;
 
 .container {
   display: grid;
@@ -65,7 +65,7 @@
   }
 
   &.available {
-    background-color: $white;
+    background-color: white;
   }
 
   &.selected {
@@ -77,7 +77,7 @@
       color: white;
       .icon {
         font-size: 30px;
-        color: $white;
+        color: white;
         min-width: 30px;
         min-height: 30px;
       }

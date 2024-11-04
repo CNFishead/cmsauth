@@ -101,8 +101,7 @@ const AuthPage = (props: Props) => {
 
         <div className={styles.auth}>
           <div className={styles.banner}>{redirectName}</div>
-
-          {props.children}
+          <div className={styles.childrenContainer}>{props.children}</div>
         </div>
       </div>
     </div>

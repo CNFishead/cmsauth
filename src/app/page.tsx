@@ -1,3 +1,5 @@
+import SignInView from "@/views/signIn/SignIn.view";
+
 export default function PageView() {
-  return <div></div>;
+  return <SignInView />;
 }

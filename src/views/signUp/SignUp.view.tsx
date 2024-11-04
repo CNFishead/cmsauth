@@ -21,6 +21,8 @@ import React, { useEffect, useState } from "react";
 import useApiHook from "@/state/useApi";
 import BusinessLogoUpload from "./steps/businessLogoUpload/BusinessLogoUpload.form";
 import { CgProfile } from "react-icons/cg";
+import FeatureChoose from "./steps/featureChoose/FeatureChoose.component";
+
 type Props = {};
 
 const SignUpView = (props: Props) => {
@@ -128,6 +130,33 @@ const SignUpView = (props: Props) => {
       },
       3: {
         id: 1,
+        title: "Features",
+        component: <FeatureChoose />,
+        nextButtonText: "Next",
+        headerText: "Features",
+        subHeaderText: "Choose what matters to your church! You can always change this later.",
+        icon: <CgProfile />,
+        nextButtonDisabled: false,
+        hideBackButton: false,
+        nextButtonAction: () => {
+          Modal.confirm({
+            title: "Public View Notice",
+            content: <p>This information will be visible to the public, are you sure you want to continue?</p>,
+            onOk() {
+              setSignUpUserFormValues({
+                ...signUpUserFormValues,
+                ministryInfo: {
+                  ...signUpUserFormValues.ministryInfo,
+                  ...currentForm.getFieldsValue(),
+                },
+              });
+              advanceToNextSignUpStep();
+            },
+          });
+        },
+      },
+      4: {
+        id: 1,
         isHiddenOnSteps: true,
         component: <VerifySteps />,
         nextButtonText: "Send Verification Email",
@@ -150,7 +179,7 @@ const SignUpView = (props: Props) => {
           );
         },
       },
-      4: {
+      5: {
         id: 1,
         title: "Verification",
         isHiddenOnSteps: false,
@@ -162,7 +191,7 @@ const SignUpView = (props: Props) => {
         hideNextButton: true,
       },
     });
-  }, [currentSignUpStep]);
+  }, [currentSignUpStep, currentForm]);
 
   useEffect(() => {
     // set the partner in the partner store

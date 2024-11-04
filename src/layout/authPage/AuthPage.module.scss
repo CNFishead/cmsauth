@@ -24,7 +24,6 @@
 .wrapper {
   // background-color: $accent-color-dark;
   height: 100dvh;
-  padding-top: 10px;
 
   .container {
     display: grid;
@@ -71,6 +70,14 @@
           padding: 20px 40px;
           font-size: 15px;
         }
+      }
+      .childrenContainer {
+        width: 100%;
+        // if the container overflows, the children will be scrollable
+        overflow-y: auto;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
       }
     }
   }
