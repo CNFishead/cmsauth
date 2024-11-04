@@ -1,9 +1,8 @@
 import styles from './FeatureChoose.module.scss';
 import { useAllFeatures } from '@/state/serverState/features';
 import { getDiscounts, getPrice } from '@/utils/getPrice';
-import { Button, Empty, message, Skeleton } from 'antd';
-import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import { Skeleton } from 'antd';
+import React from 'react';
 
 import Feature from './feature/Feature.component';
 import { useInterfaceStore } from '@/state/interface';

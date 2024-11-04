@@ -1,9 +1,8 @@
 "use client";
 import styles from "./SignUp.module.scss";
-import { Button, Empty, Modal, Steps, message } from "antd";
+import { Button, Empty, Modal } from "antd";
 import { BsBox } from "react-icons/bs";
 import { useInterfaceStore } from "@/state/interface";
-import { SignUpStep } from "@/types/signUpSteps";
 import UserInformationForm from "./steps/userInformation/UserInformationForm.component";
 import { AiOutlineCheckCircle, AiOutlineUser } from "react-icons/ai";
 import { AnimatePresence, motion } from "framer-motion";
@@ -11,7 +10,6 @@ import ProfileInformationForm from "./steps/profileInformation/ProfileInformatio
 import Loader from "@/components/loader/Loader.component";
 import VerifySteps from "./steps/verifySteps/VerifySteps.component";
 import VerifyEmail from "./steps/verifyEmail/VerifyEmail.component";
-import { useUserStore } from "@/state/user";
 import MainWrapper from "@/layout/mainWrapper/MainWrapper.layout";
 import InfoWrapper from "@/layout/infoWrapper/InfoWrapper.layout";
 import { validateForm } from "@/utils/validateForm";
@@ -22,6 +20,7 @@ import useApiHook from "@/state/useApi";
 import BusinessLogoUpload from "./steps/businessLogoUpload/BusinessLogoUpload.form";
 import { CgProfile } from "react-icons/cg";
 import FeatureChoose from "./steps/featureChoose/FeatureChoose.component";
+import PaymentInformation from "./steps/paymentInformation/PaymentInformation.component";
 
 type Props = {};
 
@@ -37,6 +36,7 @@ const SignUpView = (props: Props) => {
     addError,
     setSteps,
     steps,
+    features,
   } = useInterfaceStore((state) => state);
   const [registerMerchantLoading, setRegisterMerchantLoading] = useState(false);
   const { mutate: registerMerchant } = useApiHook({
@@ -139,23 +139,55 @@ const SignUpView = (props: Props) => {
         nextButtonDisabled: false,
         hideBackButton: false,
         nextButtonAction: () => {
+          if (features.length > 0) {
+            advanceToNextSignUpStep();
+          } else {
+            addError({ message: "Please select at least one feature", type: "error" });
+          }
+        },
+      },
+      4: {
+        id: 1,
+        title: "Payment information",
+        component: <PaymentInformation />,
+        nextButtonText: "Next",
+        headerText: "Credit Card Information",
+        subHeaderText: "At the current time, we only accept credit card payments. Please fill out the form below.",
+        icon: <CgProfile />,
+        nextButtonDisabled: false,
+        hideBackButton: false,
+        nextButtonAction: () => {
           Modal.confirm({
-            title: "Public View Notice",
-            content: <p>This information will be visible to the public, are you sure you want to continue?</p>,
-            onOk() {
-              setSignUpUserFormValues({
-                ...signUpUserFormValues,
-                ministryInfo: {
-                  ...signUpUserFormValues.ministryInfo,
-                  ...currentForm.getFieldsValue(),
-                },
-              });
-              advanceToNextSignUpStep();
+            title: "14-day Free Trial Information",
+            content: (
+              <div className={"free-trial-modal"}>
+                <p>
+                  <strong>Nominal Authorization Charge:</strong> To ensure a smooth trial initiation, we will authenticate the card details
+                  you provide, this may result in a nominal charge of $1.00. This charge will be voided and refunded
+                </p>
+                <br />
+                <p>
+                  <strong>Automatic Free Trial Activation:</strong> Once you've verified your email address and we have
+                  verified your account, you'll gain full access to your selected features for <strong>free</strong> for
+                  the first 14 days since creating your account.
+                </p>
+                <br />
+                <p>
+                  <strong>Cancel anytime:</strong> You can cancel at any time during this period and you will not be
+                  charged. If you do not cancel, your payment method will be automatically charged at the end of the
+                  trial period.
+                </p>
+              </div>
+            ),
+            okText: "Agree and Register",
+            onOk: () => {
+              // if (recapchaIsVerified) signUpPaid();
+              // else message.error("We couldn't verify that you are a human. Please try again.");
             },
           });
         },
       },
-      4: {
+      5: {
         id: 1,
         isHiddenOnSteps: true,
         component: <VerifySteps />,
@@ -179,7 +211,7 @@ const SignUpView = (props: Props) => {
           );
         },
       },
-      5: {
+      6: {
         id: 1,
         title: "Verification",
         isHiddenOnSteps: false,
@@ -191,7 +223,7 @@ const SignUpView = (props: Props) => {
         hideNextButton: true,
       },
     });
-  }, [currentSignUpStep, currentForm]);
+  }, [currentSignUpStep, currentForm, features]);
 
   useEffect(() => {
     // set the partner in the partner store

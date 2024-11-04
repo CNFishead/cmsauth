@@ -37,13 +37,13 @@ const PaymentInformationForm = () => {
         return (
           <div>
             <h1 className={styles.header}>Select your payment method</h1>
-            <Button
+            {/* <Button
               className={styles.paymentMethodButton}
               onClick={() => setPaymentMethod('ach')}
             >
               <AiOutlineBank />
               <span>Bank Account (ACH)</span>
-            </Button>
+            </Button> */}
             <Button
               className={styles.paymentMethodButton}
               onClick={() => setPaymentMethod('card')}
@@ -86,27 +86,4 @@ const PaymentInformationForm = () => {
   );
 };
 
-export default PaymentInformationForm;
-
-// async function checkCouponCode() {
-//   try {
-//     const { data } = await axios.post(`/coupon/check`, { code });
-//     if (data.success === true) {
-//       // alert the user that the username is taken
-//       setCouponCodeValid(true);
-//       setDiscount(data.coupon.discount);
-//       dispatch(
-//         setAlert(
-//           `You received a ${data.coupon.discount.toFixed(2)}% discount`,
-//           'success'
-//         )
-//       );
-//     } else {
-//       setCouponCodeValid(false);
-//       setDiscount(0);
-//     }
-//   } catch (err) {
-//     setCouponCodeValid(false);
-//     setDiscount(0);
-//   }
-// }
+export default PaymentInformationForm; 
