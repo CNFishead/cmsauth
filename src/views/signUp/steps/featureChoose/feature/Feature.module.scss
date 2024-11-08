@@ -1,4 +1,4 @@
-@use "@/styles/globals.scss" as *;
+@use '@/styles/globals.scss' as *;
 
 .container {
   display: grid;
@@ -62,6 +62,7 @@
     padding: 5px 10px;
     border-radius: 5px;
     text-align: left;
+    color: white;
   }
 
   &.available {
@@ -98,7 +99,7 @@
 
     .reliesOnBadge {
       background-color: $accent-color-dark;
-      color: rgb(255, 255, 255);
+      color: rgb(255, 255, 255) !important;
     }
   }
 

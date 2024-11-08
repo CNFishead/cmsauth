@@ -1,8 +1,8 @@
 //create a zustand store for a token of a user
-import { create } from "zustand";
-import { SignUpStep } from "../types/signUpSteps";
-import { mountStoreDevtool } from "simple-zustand-devtools";
-import { v4 as uuidv4 } from "uuid";
+import { create } from 'zustand';
+import { SignUpStep } from '../types/signUpSteps';
+import { mountStoreDevtool } from 'simple-zustand-devtools';
+import { v4 as uuidv4 } from 'uuid';
 
 type InterfaceState = {
   currentSignUpStep: number;
@@ -25,7 +25,10 @@ type InterfaceState = {
 
   setSteps: (steps: { [key: number]: SignUpStep }) => void;
   setErrors: (errors: any[]) => void;
-  addError: (error: { type: string; message: string; id?: string }, timeout?: number) => void;
+  addError: (
+    error: { type: string; message: string; id?: string },
+    timeout?: number
+  ) => void;
   removeError: (id: string) => void;
   setCurrentSignUpStep: (step: number) => void;
   advanceToNextSignUpStep: () => void;
@@ -44,118 +47,124 @@ type InterfaceState = {
   setRecapchaIsVerified: (value: boolean) => void;
 };
 
-export const useInterfaceStore = create<InterfaceState>((set: any, get: any) => ({
-  steps: {},
-  setSteps: (steps: { [key: number]: SignUpStep }) => {
-    set({ steps });
-  },
-  errors: [],
-  setErrors: (errors: any[]) => set({ errors }),
+export const useInterfaceStore = create<InterfaceState>(
+  (set: any, get: any) => ({
+    steps: {},
+    setSteps: (steps: { [key: number]: SignUpStep }) => {
+      set({ steps });
+    },
+    errors: [],
+    setErrors: (errors: any[]) => set({ errors }),
 
-  addError: (error: any, timeout = 5000) => {
-    const { errors } = get();
-    const id = uuidv4();
-    set({ errors: [...errors, { id, ...error }] });
-
-    setTimeout(() => {
+    addError: (error: any, timeout = 5000) => {
       const { errors } = get();
-      set({ errors: errors.filter((e: any) => e.id !== id) });
-    }, timeout);
-  },
+      const id = uuidv4();
+      set({ errors: [...errors, { id, ...error }] });
 
-  removeError: (id: string) => {
-    set((state: any) => ({
-      errors: state.errors.filter((error: any) => error.id !== id),
-    }));
-  },
+      setTimeout(() => {
+        const { errors } = get();
+        set({ errors: errors.filter((e: any) => e.id !== id) });
+      }, timeout);
+    },
 
-  currentSignUpStep: 3,
-  setCurrentSignUpStep: (step: number) => {
-    set({ currentSignUpStep: step });
-  },
-  isGoingToPreviousStep: false,
+    removeError: (id: string) => {
+      set((state: any) => ({
+        errors: state.errors.filter((error: any) => error.id !== id),
+      }));
+    },
 
-  advanceToNextSignUpStep: () => {
-    set((state: any) => {
-      return {
-        signUpErrorDetected: true,
-        currentSignUpStep: state.currentSignUpStep + 1,
-        isGoingToPreviousStep: false,
-      };
-    });
-  },
-  goBackToPreviousSignUpStep: () => {
-    set((state: any) => {
-      return {
-        signUpErrorDetected: false,
+    currentSignUpStep: 0,
+    setCurrentSignUpStep: (step: number) => {
+      set({ currentSignUpStep: step });
+    },
+    isGoingToPreviousStep: false,
 
-        currentSignUpStep: state.currentSignUpStep - 1,
-        isGoingToPreviousStep: true,
-      };
-    });
-  },
+    advanceToNextSignUpStep: () => {
+      set((state: any) => {
+        return {
+          signUpErrorDetected: true,
+          currentSignUpStep: state.currentSignUpStep + 1,
+          isGoingToPreviousStep: false,
+        };
+      });
+    },
+    goBackToPreviousSignUpStep: () => {
+      set((state: any) => {
+        return {
+          signUpErrorDetected: false,
 
-  setCurrentForm: (form: any) => {
-    set({ currentForm: form });
-  },
-  currentForm: undefined,
+          currentSignUpStep: state.currentSignUpStep - 1,
+          isGoingToPreviousStep: true,
+        };
+      });
+    },
 
-  signUpUserFormValues: {},
-  setSignUpUserFormValues: (values: any) => {
-    set({ signUpUserFormValues: values });
-  },
+    setCurrentForm: (form: any) => {
+      set({ currentForm: form });
+    },
+    currentForm: undefined,
 
-  signUpProfileFormValues: {},
-  setSignUpProfileFormValues: (values: any) => {
-    set({ signUpProfileFormValues: values });
-  },
+    signUpUserFormValues: {},
+    setSignUpUserFormValues: (values: any) => {
+      set({ signUpUserFormValues: values });
+    },
 
-  signUpErrorDetected: true,
-  setSignUpErrorDetected: (value: any) => {
-    set({ signUpErrorDetected: value });
-  },
+    signUpProfileFormValues: {},
+    setSignUpProfileFormValues: (values: any) => {
+      set({ signUpProfileFormValues: values });
+    },
 
-  paymentMethod: "",
-  setPaymentMethod: (method: any) => {
-    set({ paymentMethod: method });
-  },
+    signUpErrorDetected: true,
+    setSignUpErrorDetected: (value: any) => {
+      set({ signUpErrorDetected: value });
+    },
 
-  signUpPaymentFormValues: {},
-  setSignUpPaymentFormValues: (values: any) => {
-    set({ signUpPaymentFormValues: values });
-  },
+    paymentMethod: '',
+    setPaymentMethod: (method: any) => {
+      set({ paymentMethod: method });
+    },
 
-  features: [],
-  selectFeature: (feature: any) => {
-    const newFeatures = get().features.filter((f: any) => f._id !== feature._id);
-    newFeatures.push(feature);
-    set({ features: newFeatures });
-  },
-  removeFeature: (feature: any) => {
-    const newFeatures = get().features.filter((f: any) => f._id !== feature._id && f.reliesOn !== feature._id);
-    set({ features: newFeatures });
-  },
+    signUpPaymentFormValues: {},
+    setSignUpPaymentFormValues: (values: any) => {
+      set({ signUpPaymentFormValues: values });
+    },
 
-  redirectName: undefined,
-  redirectUrl: undefined,
-  setRedirectUrl: (url: any) => {
-    set({ redirectUrl: url });
-  },
-  setRedirectName: (name: any) => {
-    set({ redirectName: name });
-  },
+    features: [],
+    selectFeature: (feature: any) => {
+      const newFeatures = get().features.filter(
+        (f: any) => f._id !== feature._id
+      );
+      newFeatures.push(feature);
+      set({ features: newFeatures });
+    },
+    removeFeature: (feature: any) => {
+      const newFeatures = get().features.filter(
+        (f: any) => f._id !== feature._id && f.reliesOn !== feature._id
+      );
+      set({ features: newFeatures });
+    },
 
-  didSendEmail: false,
-  setDidSendEmail: (value: boolean) => {
-    set({ didSendEmail: value });
-  },
+    redirectName: undefined,
+    redirectUrl: undefined,
+    setRedirectUrl: (url: any) => {
+      set({ redirectUrl: url });
+    },
+    setRedirectName: (name: any) => {
+      set({ redirectName: name });
+    },
 
-  recapchaIsVerified: false,
-  setRecapchaIsVerified: (value: boolean) => {
-    set({ recapchaIsVerified: value });
-  },
-}));
+    didSendEmail: false,
+    setDidSendEmail: (value: boolean) => {
+      set({ didSendEmail: value });
+    },
 
-if (process.env.NODE_ENV === "development") {
-  mountStoreDevtool("Store", useInterfaceStore);
+    recapchaIsVerified: false,
+    setRecapchaIsVerified: (value: boolean) => {
+      set({ recapchaIsVerified: value });
+    },
+  })
+);
+
+if (process.env.NODE_ENV === 'development') {
+  mountStoreDevtool('Store', useInterfaceStore);
 }

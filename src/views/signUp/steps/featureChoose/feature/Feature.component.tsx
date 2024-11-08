@@ -19,7 +19,8 @@ type Props = {
 
 const Feature = (props: Props) => {
   const { data: featuresData } = useAllFeatures();
-  const { features, selectFeature, removeFeature } = useInterfaceStore();
+  const { features, selectFeature, removeFeature, addError } =
+    useInterfaceStore();
 
   const reliesOnFeatureIsSelected = () => {
     var add = false;
@@ -36,14 +37,22 @@ const Feature = (props: Props) => {
     else {
       if (reliesOnFeatureIsSelected()) selectFeature(props.feature);
       else {
-        Modal.error({
-          title: 'Feature not available',
-          content: `You must add the ${
+        addError({
+          type: 'error',
+          message: `You must add the ${
             featuresData.allFeatures.find(
               (f: any) => f._id == props.feature.reliesOn
             ).name
           } feature before adding the ${props.feature.name} feature.`,
         });
+        // Modal.error({
+        //   title: 'Feature not available',
+        //   content: `You must add the ${
+        //     featuresData.allFeatures.find(
+        //       (f: any) => f._id == props.feature.reliesOn
+        //     ).name
+        //   } feature before adding the ${props.feature.name} feature.`,
+        // });
       }
     }
   };
@@ -77,9 +86,8 @@ const Feature = (props: Props) => {
           <Badge className={styles.reliesOnBadge}>
             This feature relies on the{' '}
             {
-              featuresData.allFeatures.find(
-                (f: any) => f._id == props.feature.reliesOn
-              ).name
+              featuresData.find((f: any) => f._id == props.feature.reliesOn)
+                .name
             }{' '}
             feature.
           </Badge>

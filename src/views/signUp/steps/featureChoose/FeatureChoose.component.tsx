@@ -19,15 +19,23 @@ const FeaturesView = (props: Props) => {
   return (
     <div className={styles.container}>
       <div className={styles.features}>
-        {featuresData?.map((feature: any) => {
-          return (
-            <Feature
-              feature={feature}
-              key={feature._id}
-              isSelected={features.includes(feature)}
-            />
-          );
-        })}
+        {featuresData
+          ?.filter((feature: any) => {
+            // return only features that dont have a reliesOn feature or if they do, that reliesOn feature is selected
+            if (feature.reliesOn) {
+              return features.some((f) => f._id === feature.reliesOn);
+            }
+            return true;
+          })
+          .map((feature: any) => {
+            return (
+              <Feature
+                feature={feature}
+                key={feature._id}
+                isSelected={features.includes(feature)}
+              />
+            );
+          })}
         {getDiscounts(features, featuresData).map((feature) => {
           return <Feature feature={feature} key={feature._id} isDiscount />;
         })}
@@ -40,10 +48,23 @@ const FeaturesView = (props: Props) => {
             {getPrice(features.concat(getDiscounts(features, featuresData)), {
               noCredits: true,
             })}
-            /Month
+            /
+            {features.some((f) => f._id === '672e251f4738ac9c1cf8ed6a')
+              ? 'year'
+              : 'month'}
           </h1>
         </div>
-        <p className={styles.subText}>Not including any applicable taxes, if any.</p>
+        {/* <p className={styles.subText}> */}
+        {
+          // if features includes the early adopters feature, then show the amount of payment after the introductory discount
+          features.some((f) => f._id === '672e251f4738ac9c1cf8ed6a') && (
+            <p className={styles.subText}>
+              Introductory discount: 20% off for the first year, then
+              $239.88/year
+            </p>
+          )
+        }
+        {/* </p> */}
         <p className={styles.freeTrialText}>(After 14 day Free Trial)</p>
       </div>
     </div>
