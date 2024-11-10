@@ -1,39 +1,36 @@
 import React from 'react';
 import styles from './ResendVerification.module.scss';
 import { Form, Input, Button } from 'antd';
-import {
-  useResendVerificationEmail,
-  useVerifyEmail,
-} from '@/state/serverState/auth';
+import { useResendVerificationEmail } from '@/state/serverState/auth';
 import { useInterfaceStore } from '@/state/interface';
 import Loader from '@/components/loader/Loader.component';
 import InfoWrapper from '@/layout/infoWrapper/InfoWrapper.layout';
 import MainWrapper from '@/layout/mainWrapper/MainWrapper.layout';
 import { useRouter } from 'next/router';
-import usePostData from '@/state/usePostData';
 import Image from 'next/image';
-type Props = {};
+import useApiHook from '@/state/useApi';
 
-const ResendVerification = (props: Props) => {
+const ResendVerification = () => {
   const router = useRouter();
   // pull out the verify token from the query params
   const verifyCode = router.query.verify as string;
   const [merchant, setMerchant] = React.useState<any>({});
   const { mutate: resendVerification, isLoading } =
-    useResendVerificationEmail();
+    useResendVerificationEmail() as any;
   const { didSendEmail } = useInterfaceStore((state) => state);
   const {
     mutate: verifyEmail,
     data: verifyData,
     isLoading: verifyLoading,
     isSuccess: isVerifySuccess,
-  } = usePostData({
+  } = useApiHook({
     url: `/auth/verifyEmail?verify=${verifyCode}`,
     key: 'verifyEmail',
     onSuccessCallback: (data) => {
       setMerchant(data.payload);
     },
-  });
+    method: 'POST',
+  }) as any;
 
   const onFinish = async (values: any) => {
     resendVerification({
@@ -85,7 +82,7 @@ const ResendVerification = (props: Props) => {
                   href={`https://payment.pyreprocessing.com/service/nmi/${merchant.businessInfo.businessSlug}`}
                   className={styles.merchantLink}
                 >
-                  {merchant.businessInfo.name}'s services page
+                  {merchant.businessInfo.name}&apos;s services page
                 </a>{' '}
                 this page is specific to your account! while it doesnt have any
                 services yet, you can see the page and how it will look like

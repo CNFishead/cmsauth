@@ -18,13 +18,13 @@ const UserInformationForm = () => {
     <Form
       className={styles.form}
       initialValues={{
-        // firstName: "John",
-        // lastName: "Doe",
-        // email: "cnfishead@gmail.com",
-        // username: "cnfishead",
-        // password: "Password10",
-        // confirmPassword: "Password10",
-        // phoneNumber: "123-456-7890",
+        firstName: "John",
+        lastName: "Doe",
+        email: "cnfishead@gmail.com",
+        username: "cnfishead",
+        password: "Password10",
+        confirmPassword: "Password10",
+        phoneNumber: "123-456-7890",
         sex: "male",
       }}
       layout="vertical"

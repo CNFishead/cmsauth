@@ -19,7 +19,7 @@ type Props = {
 };
 
 const ResetPassword = (props: Props) => {
-  const { mutate: createNewPassword, isLoading } = useCreateNewPassword();
+  const { mutate: createNewPassword, isLoading } = useCreateNewPassword() as any;
 
   const onFinish = async (values: any) => {
     createNewPassword({

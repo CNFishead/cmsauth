@@ -1,6 +1,5 @@
-import { Badge, Button, Modal, message } from 'antd';
+import { Badge, Button } from 'antd';
 import styles from './Feature.module.scss';
-import { useState } from 'react';
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { useAllFeatures } from '@/state/serverState/features';
 import { useInterfaceStore } from '@/state/interface';
@@ -23,7 +22,7 @@ const Feature = (props: Props) => {
     useInterfaceStore();
 
   const reliesOnFeatureIsSelected = () => {
-    var add = false;
+    let add = false;
     if (Boolean(props.feature.reliesOn)) {
       features.forEach((f: any) => {
         if (props.feature.reliesOn == f._id) add = true;

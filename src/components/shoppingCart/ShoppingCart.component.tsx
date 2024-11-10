@@ -1,15 +1,12 @@
 import { useInterfaceStore } from '@/state/interface';
 import styles from './ShoppingCart.module.scss';
 
-import { AiOutlineShoppingCart } from 'react-icons/ai';
 import { getDiscounts, getPrice } from '@/utils/getPrice';
-import { Button, FloatButton } from 'antd';
+import { Button } from 'antd';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useAllFeatures } from '@/state/serverState/features';
 import { useState } from 'react';
-type Props = {};
 
-const ShoppingCart = (props: Props) => {
+const ShoppingCart = () => {
   // const { data: featuresData } = useAllFeatures();
   const { features, setCurrentSignUpStep } = useInterfaceStore(
     (state) => state
@@ -37,8 +34,8 @@ const ShoppingCart = (props: Props) => {
                 transition={{ ease: 'easeInOut', duration: 0.3 }}
               >
                 <h1 className={styles.title}>Chosen Features</h1>
-                {features.map((feature) => (
-                  <div className={styles.feature}>
+                {features.map((feature: any) => (
+                  <div className={styles.feature} key={feature._id}>
                     <p className={styles.featureName}>{feature.name}</p>
                     <p className={styles.featurePrice}>${feature.price}</p>
                   </div>
@@ -48,8 +45,8 @@ const ShoppingCart = (props: Props) => {
                   features,
                   // TODO: Uncomment this if you add features -> featuresData
                   []
-                ).map((feature) => (
-                  <div className={styles.feature}>
+                ).map((feature: any) => (
+                  <div className={styles.feature} key={feature._id}>
                     <p className={styles.featureName}>{feature.name}</p>
                     <p className={styles.featurePrice}>${feature.price}</p>
                   </div>
@@ -93,7 +90,10 @@ const ShoppingCart = (props: Props) => {
                       noCredits: true,
                     }
                   )}
-                  /Month{' '}
+                  /
+                  {features.some((f) => f._id === '672e251f4738ac9c1cf8ed6a')
+                    ? 'year'
+                    : 'month'}{' '}
                   <p className={styles.freeTrialText}>
                     (After 14 day Free Trial)
                   </p>

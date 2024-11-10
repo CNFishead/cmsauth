@@ -7,9 +7,7 @@ import React from 'react';
 import Feature from './feature/Feature.component';
 import { useInterfaceStore } from '@/state/interface';
 
-type Props = {};
-
-const FeaturesView = (props: Props) => {
+const FeaturesView = () => {
   const { data: featuresData, isLoading } = useAllFeatures();
 
   const { features } = useInterfaceStore();

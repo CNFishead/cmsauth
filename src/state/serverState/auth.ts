@@ -1,12 +1,12 @@
 //Use react-query to fetch data from the server
-import axios from "@/utils/axios";
-import errorHandler from "@/utils/errorHandler";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useUserStore } from "../user";
-import { message } from "antd";
-import { useInterfaceStore } from "../interface";
-import { useRouter } from "next/navigation";
-import { usePartnerStore } from "../partner";
+import axios from '@/utils/axios';
+import errorHandler from '@/utils/errorHandler';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useUserStore } from '../user';
+import { message } from 'antd';
+import { useInterfaceStore } from '../interface';
+import { useRouter } from 'next/navigation';
+import { usePartnerStore } from '../partner';
 
 const login = async (options: { email: string; password: string }) => {
   //call api
@@ -36,17 +36,23 @@ export const useLogin = () => {
     onError: (error: any) => {
       console.log(error);
 
-      if (error.response.data.isEmailVerified === false && error.response.data.isEmailVerified !== null) {
-        router.push("/resend-verification");
+      if (
+        error.response.data.isEmailVerified === false &&
+        error.response.data.isEmailVerified !== null
+      ) {
+        router.push('/resend-verification');
       }
       errorHandler(error);
     },
   });
 };
 
-const signUpFree = async (options: { registrationData: Object; partner: string | undefined }) => {
+const signUpFree = async (options: {
+  registrationData: object;
+  partner: string | undefined;
+}) => {
   const { data } = await axios.post(
-    `/auth/register?partnerid=${options.partner ? options.partner : ""}`,
+    `/auth/register?partnerid=${options.partner ? options.partner : ''}`,
 
     options.registrationData
   );
@@ -59,13 +65,13 @@ export const useSignUpFree = () => {
   const { partner } = usePartnerStore((state) => state);
 
   return useMutation({
-    mutationFn: (data: { registrationData: Object }) =>
+    mutationFn: (data: { registrationData: object }) =>
       signUpFree({
         registrationData: data.registrationData,
         partner: partner,
       }),
     onSuccess: (user) => {
-      message.success("Account created successfully");
+      message.success('Account created successfully');
       setUser(user);
     },
     onError: (error) => {
@@ -76,25 +82,15 @@ export const useSignUpFree = () => {
 };
 
 const signUpPaid = async (options: {
-  registrationData: Object;
+  registrationData: object;
   features: any;
-  type: "ach" | "card";
+  type: 'ach' | 'card';
   partner: string | undefined;
 }) => {
-  var url;
-  switch (options.type) {
-    case "ach":
-      url = `/auth/register-ach`;
-      break;
-    case "card":
-      url = `/auth/register-cc`;
-      break;
-  }
-
   const { data } = await axios.post(
-    url + `?partnerid=${options.partner ? options.partner : ""}`,
+    `/auth/register?partnerid=${options.partner ? options.partner : ''}`,
 
-    { user: options.registrationData, features: options.features }
+    { ...options.registrationData, features: options.features }
   );
 
   return data.user;
@@ -102,8 +98,13 @@ const signUpPaid = async (options: {
 
 export const useSignUpPaid = () => {
   const { setUser } = useUserStore((state) => state);
-  const { paymentMethod, features, signUpUserFormValues, signUpPaymentFormValues, signUpProfileFormValues } =
-    useInterfaceStore((state) => state);
+  const {
+    paymentMethod,
+    features,
+    signUpUserFormValues,
+    signUpPaymentFormValues,
+    signUpProfileFormValues,
+  } = useInterfaceStore((state) => state);
   const { partner } = usePartnerStore((state) => state);
 
   return useMutation({
@@ -119,7 +120,7 @@ export const useSignUpPaid = () => {
         partner: partner,
       }),
     onSuccess: (user) => {
-      message.success("Account created successfully");
+      message.success('Account created successfully');
       setUser(user);
     },
     onError: (error) => {
@@ -148,20 +149,22 @@ export const useVerifyEmail = () => {
       }),
     onSuccess: (user) => {
       setUser(user);
-      message.success("Email verified successfully!");
+      message.success('Email verified successfully!');
     },
     onError: (error: any) => {
-      if (error.response.data.message === "Invalid token.") {
-        message.error("It looks like your verification link is invalid or has expired, please request a new one.");
-        router.push("/resend-verification");
+      if (error.response.data.message === 'Invalid token.') {
+        message.error(
+          'It looks like your verification link is invalid or has expired, please request a new one.'
+        );
+        router.push('/resend-verification');
       }
     },
   });
 };
 
-const resendVerificationEmail = async (options: { email: String }) => {
+const resendVerificationEmail = async (options: { email: string }) => {
   //call api
-  const { data } = await axios.post("/auth/resend-verification-email", {
+  const { data } = await axios.post('/auth/resend-verification-email', {
     email: options.email,
   });
 
@@ -172,7 +175,7 @@ export const useResendVerificationEmail = () => {
   const { setDidSendEmail } = useInterfaceStore((state) => state);
 
   return useMutation({
-    mutationFn: (data: { email: String }) =>
+    mutationFn: (data: { email: string }) =>
       resendVerificationEmail({
         email: data.email,
       }),
@@ -187,9 +190,9 @@ export const useResendVerificationEmail = () => {
   });
 };
 
-const sendPasswordForgotRequest = async (options: { username: String }) => {
+const sendPasswordForgotRequest = async (options: { username: string }) => {
   //call api
-  const { data } = await axios.post("/auth/forgotpassword", {
+  const { data } = await axios.post('/auth/forgotpassword', {
     username: options.username,
   });
 
@@ -200,7 +203,7 @@ export const useSendPasswordForgotRequest = () => {
   const { setDidSendEmail } = useInterfaceStore((state) => state);
 
   return useMutation({
-    mutationFn: (data: { username: String }) =>
+    mutationFn: (data: { username: string }) =>
       sendPasswordForgotRequest({
         username: data.username,
       }),
@@ -215,11 +218,17 @@ export const useSendPasswordForgotRequest = () => {
   });
 };
 
-const createNewPassword = async (options: { resetToken: String; password: String }) => {
+const createNewPassword = async (options: {
+  resetToken: string;
+  password: string;
+}) => {
   //call api
-  const { data } = await axios.put(`/auth/resetpassword/${options.resetToken}`, {
-    password: options.password,
-  });
+  const { data } = await axios.put(
+    `/auth/resetpassword/${options.resetToken}`,
+    {
+      password: options.password,
+    }
+  );
 
   return data;
 };
@@ -228,7 +237,7 @@ export const useCreateNewPassword = () => {
   const { setUser } = useUserStore((state) => state);
 
   return useMutation({
-    mutationFn: (data: { resetToken: String; password: String }) =>
+    mutationFn: (data: { resetToken: string; password: string }) =>
       createNewPassword({
         resetToken: data.resetToken,
         password: data.password,

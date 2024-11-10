@@ -4,7 +4,7 @@ export const getPrice = (
     noCredits?: boolean;
   }
 ) => {
-  var price = features.reduce((acc, feature) => {
+  let price = features.reduce((acc, feature) => {
     return acc + feature.price;
   }, 0);
 
@@ -20,8 +20,8 @@ export const getPrice = (
 };
 
 export const getDiscounts = (features: any[], featuresData: any) => {
-  var discountFeatures: any[] = [];
-  var currentFeatures = [...features.map((f) => f._id)];
+  const discountFeatures: any[] = [];
+  const currentFeatures = [...features.map((f) => f._id)];
 
   //If the user has the early adopters feature, then they get a discount
   //since they'll be paying for the platform for a year in advance

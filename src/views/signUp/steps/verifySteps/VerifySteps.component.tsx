@@ -6,17 +6,8 @@ const VerifySteps = () => {
     {
       title: 'Verify Email',
       icon: <FaEnvelope />,
-      description:
-        'In order to gain access to your account, we require that you verify your email address by confirming that it is valid and belongs to you.',
-    },
-    {
-      title: 'Pyre Verification',
-      icon: <FaUserCheck />,
-      description: `We will verify your business information to ensure that you are a 
-      legitimate business owner. This is to protect our users and ensure that all businesses 
-      on our platform are legitimate and trustworthy. In doing so, a representative from Pyre will
-      reach out to you to verify your business information. and walk you through the next steps of 
-      the verification process.`,
+      description: `In order to gain access to your account, we require that you verify your email address by confirming that it is valid and belongs to you. An Email has already
+        been sent to your inbox with a link to verify your email address.`,
     },
   ];
   return (

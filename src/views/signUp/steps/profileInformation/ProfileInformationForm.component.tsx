@@ -1,19 +1,20 @@
-import axios from "@/utils/axios";
-import { Form, Input, Radio, Select, Button, InputNumber } from "antd";
-import styles from "@/styles/Form.module.scss";
-import { useInterfaceStore } from "@/state/interface";
-import { useEffect } from "react";
-import phoneNumber from "@/utils/phoneNumber";
-import { states } from "@/utils/states";
+import axios from '@/utils/axios';
+import { Form, Input, Radio, Select, Button, InputNumber } from 'antd';
+import styles from '@/styles/Form.module.scss';
+import { useInterfaceStore } from '@/state/interface';
+import { useEffect } from 'react';
+import phoneNumber from '@/utils/phoneNumber';
+import { states } from '@/utils/states';
 
 const ProfileInformationForm = () => {
   const [form] = Form.useForm();
-  const { setSignUpProfileFormValues, signUpProfileFormValues, setSignUpErrorDetected } = useInterfaceStore(
+  const { signUpProfileFormValues, setCurrentForm } = useInterfaceStore(
     (state) => state
   );
 
   useEffect(() => {
-    form.setFieldsValue(signUpProfileFormValues);
+    form.setFieldsValue({ ...signUpProfileFormValues.ministryInfo });
+    setCurrentForm(form);
   }, []);
 
   return (
@@ -21,27 +22,26 @@ const ProfileInformationForm = () => {
       className={styles.form}
       layout="vertical"
       initialValues={{
-        name: "Test Ministry",
-        bio: "a reall good ministry biography",
-        address: "123 main st",
-        address2: "",
-        city: "Kansas City",
-        state: "KS",
-        zipCode: "234564",
-        // facebook: "test-ministry",
-        // instagram: "test-insta",
-        // youtube: "test-youtube",
-        // website: "",
+        name: 'Test Ministry',
+        bio: 'a reall good ministry biography',
+        address: '123 main st',
+        address2: '',
+        city: 'Kansas City',
+        state: 'KS',
+        zipCode: '234564',
       }}
-    >
-      <h1 className={styles.header}>Ministry Information</h1>
-
+      form={form}
+    > 
       <div className={styles.group}>
-        <Form.Item name={"name"} label="Ministry Name" rules={[{ required: true }]}>
+        <Form.Item
+          name={'name'}
+          label="Ministry Name"
+          rules={[{ required: true }]}
+        >
           <Input className={styles.input} />
         </Form.Item>
       </div>
-      <Form.Item name={"bio"} label="Mission Statement">
+      <Form.Item name={'bio'} label="Mission Statement">
         <Input.TextArea className={styles.input} />
       </Form.Item>
       <br />
@@ -49,7 +49,7 @@ const ProfileInformationForm = () => {
 
       <div className={styles.group}>
         <Form.Item
-          name={"address"}
+          name={'address'}
           label="Address"
           rules={[
             {
@@ -59,50 +59,41 @@ const ProfileInformationForm = () => {
         >
           <Input className={styles.input} />
         </Form.Item>
-        <Form.Item name={"address2"} label="Address 2">
+        <Form.Item name={'address2'} label="Address 2">
           <Input className={styles.input} />
         </Form.Item>
       </div>
       <div className={styles.group}>
-        <Form.Item name={"city"} label="City" rules={[{ required: true }]}>
+        <Form.Item name={'city'} label="City" rules={[{ required: true }]}>
           <Input className={styles.input} />
         </Form.Item>
-        <Form.Item name={"state"} label="State" rules={[{ required: true }]}>
+        <Form.Item name={'state'} label="State" rules={[{ required: true }]}>
           <Select
             placeholder="Select a state"
             className={styles.input}
             showSearch
-            filterOption={(input: any, option: any) => option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+            filterOption={(input: any, option: any) =>
+              option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
           >
             {states.map((state) => (
-              <Select.Option key={state.abbreviation} value={state.abbreviation}>
+              <Select.Option
+                key={state.abbreviation}
+                value={state.abbreviation}
+              >
                 {state.abbreviation}
               </Select.Option>
             ))}
           </Select>
         </Form.Item>
-        <Form.Item name={"zipCode"} label="Zip Code" rules={[{ required: true }]}>
+        <Form.Item
+          name={'zipCode'}
+          label="Zip Code"
+          rules={[{ required: true }]}
+        >
           <Input className={styles.input} />
         </Form.Item>
-      </div>
-      {/* <br />
-
-      <h1 className={styles.header}>Social Information</h1>
-
-      <div className={styles.group}>
-        <Form.Item name={"facebook"} label="Facebook">
-          <Input className={styles.input} />
-        </Form.Item>
-        <Form.Item name={"instagram"} label="Instagram">
-          <Input className={styles.input} />
-        </Form.Item>
-        <Form.Item name={"youtube"} label="Youtube">
-          <Input className={styles.input} />
-        </Form.Item>
-        <Form.Item name={"website"} label="Website">
-          <Input className={styles.input} />
-        </Form.Item>
-      </div> */}
+      </div> 
     </Form>
   );
 };

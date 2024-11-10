@@ -1,22 +1,14 @@
 import styles from './SendPasswordResetEmail.module.scss';
-import Image from 'next/image';
 import { Form, Input, Button } from 'antd';
-import {
-  useLogin,
-  useResendVerificationEmail,
-  useSendPasswordForgotRequest,
-} from '@/state/serverState/auth';
-import { useUserStore } from '@/state/user';
+import { useSendPasswordForgotRequest } from '@/state/serverState/auth';
 import { useInterfaceStore } from '@/state/interface';
-import { useState } from 'react';
 import Loader from '@/components/loader/Loader.component';
 import MainWrapper from '@/layout/mainWrapper/MainWrapper.layout';
 import InfoWrapper from '@/layout/infoWrapper/InfoWrapper.layout';
-type Props = {};
 
-const SendPasswordResetEmail = (props: Props) => {
+const SendPasswordResetEmail = () => {
   const { mutate: sendPasswordForgotRequest, isLoading } =
-    useSendPasswordForgotRequest();
+    useSendPasswordForgotRequest() as any;
   const { didSendEmail } = useInterfaceStore((state) => state);
 
   const onFinish = async (values: any) => {

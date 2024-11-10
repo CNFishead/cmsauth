@@ -1,6 +1,5 @@
 import { Form, Input, Button, message, Select } from 'antd';
-import styles from './PaymentForm.module.scss';
-import formStyles from '@/styles/Form.module.scss';
+import styles from '@/styles/Form.module.scss';
 import { useInterfaceStore } from '@/state/interface';
 import { useEffect, useState } from 'react';
 import { states } from '@/data/states';
@@ -39,21 +38,19 @@ const CardForm = () => {
       form={form}
       className={styles.form}
       layout="vertical"
-      initialValues={
-        {
-          // first_name: 'John',
-          // last_name: 'Doe',
-          // creditCardDetails: {
-          // ccnumber: '4111111111111111',
-          // ccexp: '10/25',
-          // cvv: '123',
-          // },
-          // address1: '123 Main St',
-          // address2: 'Apt 4',
-          // zip: '12345',
-          // city: 'New York',
-        }
-      }
+      initialValues={{
+        first_name: 'John',
+        last_name: 'Doe',
+        creditCardDetails: {
+          ccnumber: '4111111111111111',
+          ccexp: '10/25',
+          cvv: '123',
+        },
+        address1: '123 Main St',
+        address2: 'Apt 4',
+        zip: '12345',
+        city: 'New York',
+      }}
     >
       <div className={styles.group}>
         <Form.Item
@@ -174,18 +171,7 @@ const CardForm = () => {
         >
           <Input placeholder={'Customer City'} className={styles.input} />
         </Form.Item>
-      </div>
-
-      <div className={formStyles.form__buttonContainer}>
-        {/* save button */}
-        <Button
-          type="primary"
-          onClick={() => onFinish(form.getFieldsValue())}
-          className={styles.submitButton}
-        >
-          Save
-        </Button>
-      </div>
+      </div> 
     </Form>
   );
 };

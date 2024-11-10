@@ -23,7 +23,7 @@ const PaymentInformationForm = () => {
             <AchForm />
           </>
         );
-      case 'card':
+      case 'creditcard':
         return (
           <div>
             <div className={styles.paymentHeader}>
@@ -46,7 +46,7 @@ const PaymentInformationForm = () => {
             </Button> */}
             <Button
               className={styles.paymentMethodButton}
-              onClick={() => setPaymentMethod('card')}
+              onClick={() => setPaymentMethod('creditcard')}
             >
               <AiOutlineCreditCard />
               <span>Credit/Debit Card</span>
