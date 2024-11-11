@@ -45,25 +45,25 @@ const SignInView = () => {
               onClick={() =>
                 setRedirectUrl(
                   process.env.NODE_ENV === 'production'
-                    ? 'https://merchant.pyreprocessing.com'
+                    ? 'https://portal.shepherdcms.org'
                     : 'http://localhost:3000'
                 )
               }
             >
-              Merchant Sign-In
+              Church Sign-In
             </Card>
-            <Card
+            {/* <Card
               className={styles.card}
               onClick={() =>
                 setRedirectUrl(
                   process.env.NODE_ENV === 'production'
-                    ? 'https://portal.pyreprocessing.com'
+                    ? 'https://admin.shepherdcms.org'
                     : 'http://localhost:3000'
                 )
               }
             >
               Partner Sign-In
-            </Card>
+            </Card> */}
           </div>
         ) : (
           <Form layout="vertical" className={styles.form} onFinish={onFinish}>
