@@ -20,7 +20,7 @@ const InfoWrapper = (props: Props) => {
       {props.links?.includes('signup') && (
         <p className={styles.link}>
           Don&apos;t have an account?{' '}
-          <Link href="/signup">Start an application to be a merchant!</Link>
+          <Link href="/signup">Signup and start managing your church today!</Link>
         </p>
       )}
 

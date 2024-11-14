@@ -20,10 +20,10 @@ const SignInView = () => {
   const onFinish = async (values: any) => {
     const logout = searchParams.get('logout') === 'true';
     if (recapchaIsVerified) {
-      // login({
-      //   email: values.email,
-      //   password: values.password,
-      // });
+      login({
+        email: values.email,
+        password: values.password,
+      });
     } else
       message.error(
         "We couldn't verify that you are a human. Please try again."
