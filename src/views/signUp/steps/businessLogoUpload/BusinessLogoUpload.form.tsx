@@ -21,7 +21,7 @@ const BusinessLogoUpload = () => {
           form={form}
           action={
             process.env.NODE_ENV === "production"
-              ? "https://api.shepherdscms.com/api/v1/upload/cloudinary"
+              ? "https://api.shepherdcms.com/api/v1/upload/cloudinary"
               : "http://localhost:5000/api/v1/upload/cloudinary"
           }
           aspectRatio={16 / 9}

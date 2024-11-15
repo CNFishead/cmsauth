@@ -22,13 +22,13 @@ const ProfileInformationForm = () => {
       className={styles.form}
       layout="vertical"
       initialValues={{
-        name: 'Test Ministry',
-        bio: 'a reall good ministry biography',
-        address: '123 main st',
-        address2: '',
-        city: 'Kansas City',
-        state: 'KS',
-        zipCode: '234564',
+        // name: 'Test Ministry',
+        // bio: 'a reall good ministry biography',
+        // address: '123 main st',
+        // address2: '',
+        // city: 'Kansas City',
+        // state: 'KS',
+        // zipCode: '234564',
       }}
       form={form}
     > 
