@@ -9,6 +9,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 const SignInView = () => {
   console.log(`API URL: ${process.env.API_URL}`);
+  console.log(`API URL NEXT_PUBLIC: ${process.env.NEXT_PUBLIC_API_URL}`);
+
   const router = useRouter();
   // check for the redirect query param
   const searchParams = useSearchParams();

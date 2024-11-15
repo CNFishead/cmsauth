@@ -2,9 +2,9 @@
 const nextConfig = {
   /* config options here */
   env: {
-    API_URL: process.env.API_URL,
+    NEXT_PUBLIC_API_URL: process.env.API_URL,
+    NEXT_PUBLIC_ENCRYPTION_KEY: process.env.ENCRYPTION_KEY,
     ENV: process.env.NODE_ENV,
-    ENCRYPTION_KEY: process.env.ENCRYPTION_KEY,
   },
   images: {
     // wildcard all domains
