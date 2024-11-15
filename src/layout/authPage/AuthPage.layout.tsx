@@ -76,7 +76,7 @@ const AuthPage = (props: Props) => {
       performRedirect(
         process.env.ENV === "development"
           ? `http://localhost:3000/home${user ? `?token=${user.token}` : ""}`
-          : `https://portal.pyreprocessing.com/home${user ? `?token=${user.token}` : ""}`
+          : `https://portal.shepherdcms.org/home${user ? `?token=${user.token}` : ""}`
       );
     }
   }, [user, redirect, partner]);

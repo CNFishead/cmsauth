@@ -5,16 +5,9 @@ import { useLogin } from '@/state/serverState/auth';
 import { useInterfaceStore } from '@/state/interface';
 import InfoWrapper from '@/layout/infoWrapper/InfoWrapper.layout';
 import MainWrapper from '@/layout/mainWrapper/MainWrapper.layout';
-import { useRouter, useSearchParams } from 'next/navigation';
+import {  useSearchParams } from 'next/navigation';
 
-const SignInView = () => {
-  console.log(`API URL: ${process.env.API_URL}`);
-  console.log(`API URL NEXT_PUBLIC: ${process.env.NEXT_PUBLIC_API_URL}`);
-
-  const encyrption_key = process.env.ENCRYPTION_KEY;
-  console.log(`Encryption key: ${encyrption_key} - This was stored in a variable before being accessed`);
-
-  const router = useRouter();
+const SignInView = () => {   
   // check for the redirect query param
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect');
