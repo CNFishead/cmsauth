@@ -8,6 +8,7 @@ import MainWrapper from '@/layout/mainWrapper/MainWrapper.layout';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 const SignInView = () => {
+  console.log(`API URL: ${process.env.API_URL}`);
   const router = useRouter();
   // check for the redirect query param
   const searchParams = useSearchParams();
