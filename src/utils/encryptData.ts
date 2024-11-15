@@ -18,5 +18,5 @@ import CryptoJS, { AES } from 'crypto-js';
  * @todo write tests
  */
 export const encryptData = (data: string): string => {
-  return AES.encrypt(data, process.env.ENCRYPTION_KEY!).toString();
+  return AES.encrypt(data, process.env.NEXT_PUBLIC_ENCRYPTION_KEY!).toString();
 };

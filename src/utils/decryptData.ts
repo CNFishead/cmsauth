@@ -19,6 +19,6 @@ import CryptoJS, { AES } from 'crypto-js';
  */
 export default (data: string): string => {
   return JSON.parse(
-    AES.decrypt(data, process.env.ENCRYPTION_KEY!).toString(CryptoJS.enc.Utf8)
+    AES.decrypt(data, process.env.NEXT_PUBLIC_ENCRYPTION_KEY!).toString(CryptoJS.enc.Utf8)
   );
 };
