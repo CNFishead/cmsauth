@@ -32,6 +32,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "next.config.mjs"
-  ],
+, "loadEnv.js"  ],
   "exclude": ["node_modules"]
 }
