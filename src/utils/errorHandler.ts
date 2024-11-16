@@ -1,4 +1,5 @@
 // import { logout } from '../state/auth';
+import { useInterfaceStore } from '@/state/interface';
 import { message } from 'antd';
 
 /**
@@ -11,11 +12,13 @@ import { message } from 'antd';
  * @version - 1.0.0
  */
 export default (error: any) => {
+  const { addError } = useInterfaceStore();
   const messageTxt =
     error?.response && error.response.data.message
       ? error.response.data.message
       : error.message;
-
-  message.error(messageTxt);
+  console.log(`fell into error handler: ${messageTxt}`);
+  // message.error(messageTxt);
+  addError({ type: 'error', message: messageTxt });
   return message;
 };

@@ -139,9 +139,11 @@ const useApiHook = (options: {
       }
     },
     onError: (error: any) => {
-      addError({ id: uuidv4(), message: error.message, type: 'error' });
       if (onErrorCallback) {
         onErrorCallback(error);
+      } else {
+        console.log(`errorrrrr`);
+        addError({ message: error.message, type: 'error' });
       }
     },
   });

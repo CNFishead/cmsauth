@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styles from './VerifyEmail.module.scss';
 import { FaEnvelope } from 'react-icons/fa';
-import axios from '../../../../utils/axios';
 import { Button } from 'antd';
 import { useResendVerificationEmail } from '@/state/serverState/auth';
-import { useInterfaceStore } from '@/state/interface';
 import { useUserStore } from '@/state/user';
 
 const VerifyEmail = () => {

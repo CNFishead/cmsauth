@@ -132,7 +132,7 @@ export const useSignUpPaid = () => {
 
 const verifyEmail = async (options: { code: string }) => {
   //call api
-  const { data } = await axios.get(`/auth/verifyEmail?verify=${options.code}`);
+  const { data } = await axios.post(`/auth/verifyEmail?verify=${options.code}`);
   //get token
   const user = data.user;
   return user;
@@ -157,6 +157,8 @@ export const useVerifyEmail = () => {
           'It looks like your verification link is invalid or has expired, please request a new one.'
         );
         router.push('/resend-verification');
+      } else {
+        errorHandler(error);
       }
     },
   });
@@ -239,7 +241,11 @@ export const useCreateNewPassword = () => {
   const { setUser } = useUserStore((state) => state);
 
   return useMutation({
-    mutationFn: (data: { resetToken: string; password: string, confirmPassword: string }) =>
+    mutationFn: (data: {
+      resetToken: string;
+      password: string;
+      confirmPassword: string;
+    }) =>
       createNewPassword({
         resetToken: data.resetToken,
         password: data.password,

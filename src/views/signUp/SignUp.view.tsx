@@ -51,11 +51,11 @@ const SignUpView = () => {
   );
 
   const { mutate: signUpPaid } = useSignUpPaid();
-  const { data: merchantData } = useApiHook({
-    url: `/partner/${partnerSlug}`,
-    key: ['merchantData', partnerSlug!],
-    method: 'GET',
-  }) as any;
+  // const { data: merchantData } = useApiHook({
+  //   url: `/partner/${partnerSlug}`,
+  //   key: ['merchantData', partnerSlug!],
+  //   method: 'GET',
+  // }) as any;
 
   React.useEffect(() => {
     setSteps({
@@ -257,17 +257,17 @@ const SignUpView = () => {
     });
   }, [currentSignUpStep, currentForm, features]);
 
-  useEffect(() => {
-    // set the partner in the partner store
-    if (merchantData?.payload) {
-      setBranding({
-        logo: merchantData?.payload?.businessInfo?.logoUrl,
-        name: merchantData?.payload?.businessInfo?.name,
-        primaryColor: '#000',
-        secondaryColor: '#000',
-      });
-    }
-  }, [merchantData?.payload]);
+  // useEffect(() => {
+  //   // set the partner in the partner store
+  //   if (merchantData?.payload) {
+  //     setBranding({
+  //       logo: merchantData?.payload?.businessInfo?.logoUrl,
+  //       name: merchantData?.payload?.businessInfo?.name,
+  //       primaryColor: '#000',
+  //       secondaryColor: '#000',
+  //     });
+  //   }
+  // }, [merchantData?.payload]);
 
   if (registerMerchantLoading)
     return (
@@ -285,26 +285,26 @@ const SignUpView = () => {
       </div>
     );
 
-  if (!merchantData?.payload && partnerSlug) {
-    return (
-      <div className={styles.wrapper}>
-        <div className={styles.auth}>
-          <MainWrapper
-            title={'Error Finding Merchant Data'}
-            description={
-              'We could not find the merchant data for this partner. Please contact support, or check that the link to the partner is correct.'
-            }
-          >
-            <Empty
-              // use a warning icon
-              image={Empty.PRESENTED_IMAGE_DEFAULT}
-              description={''}
-            />
-          </MainWrapper>
-        </div>
-      </div>
-    );
-  }
+  // if (!merchantData?.payload && partnerSlug) {
+  //   return (
+  //     <div className={styles.wrapper}>
+  //       <div className={styles.auth}>
+  //         <MainWrapper
+  //           title={'Error Finding Merchant Data'}
+  //           description={
+  //             'We could not find the merchant data for this partner. Please contact support, or check that the link to the partner is correct.'
+  //           }
+  //         >
+  //           <Empty
+  //             // use a warning icon
+  //             image={Empty.PRESENTED_IMAGE_DEFAULT}
+  //             description={''}
+  //           />
+  //         </MainWrapper>
+  //       </div>
+  //     </div>
+  //   );
+  // }
   return (
     <div className={styles.wrapper}>
       <AnimatePresence initial={true} mode="wait">
