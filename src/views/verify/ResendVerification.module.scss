@@ -1,10 +1,13 @@
 @use "@/styles/globals.scss" as *;
 .auth {
+  display: flex;
+  flex-direction: column; 
+  flex: 1;
   .resendSuccess {
     background-color: $primary-color-lighter;
     padding: 20px;
     // font-weight:700;
-    color: #000000;
+    color: $quaternary-color;
     border-radius: 10px;
     margin-top: 20px;
   }

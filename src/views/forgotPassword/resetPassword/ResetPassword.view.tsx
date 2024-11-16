@@ -1,15 +1,7 @@
+'use client';
 import styles from './ResetPassword.module.scss';
-import Image from 'next/image';
 import { Form, Input, Button } from 'antd';
-import {
-  useCreateNewPassword,
-  useLogin,
-  useResendVerificationEmail,
-  useSendPasswordForgotRequest,
-} from '@/state/serverState/auth';
-import { useUserStore } from '@/state/user';
-import { useInterfaceStore } from '@/state/interface';
-import { useState } from 'react';
+import { useCreateNewPassword } from '@/state/serverState/auth';
 import Loader from '@/components/loader/Loader.component';
 import InfoWrapper from '@/layout/infoWrapper/InfoWrapper.layout';
 import MainWrapper from '@/layout/mainWrapper/MainWrapper.layout';
@@ -19,12 +11,14 @@ type Props = {
 };
 
 const ResetPassword = (props: Props) => {
-  const { mutate: createNewPassword, isLoading } = useCreateNewPassword() as any;
+  const { mutate: createNewPassword, isLoading } =
+    useCreateNewPassword() as any;
 
   const onFinish = async (values: any) => {
     createNewPassword({
       resetToken: props.resetToken,
-      password: values.confirmNewPassword,
+      password: values.newPassword,
+      confirmPassword: values.confirmPassword,
     });
   };
 
@@ -51,7 +45,7 @@ const ResetPassword = (props: Props) => {
             </Form.Item>
             <Form.Item
               label="Confirm New Password"
-              name="confirmNewPassword"
+              name="confirmPassword"
               dependencies={['newPassword']}
               rules={[
                 { required: true, message: 'Please confirm your new password' },

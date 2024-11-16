@@ -190,10 +190,10 @@ export const useResendVerificationEmail = () => {
   });
 };
 
-const sendPasswordForgotRequest = async (options: { username: string }) => {
+const sendPasswordForgotRequest = async (options: { email: string }) => {
   //call api
   const { data } = await axios.post('/auth/forgotpassword', {
-    username: options.username,
+    email: options.email,
   });
 
   return data;
@@ -203,9 +203,9 @@ export const useSendPasswordForgotRequest = () => {
   const { setDidSendEmail } = useInterfaceStore((state) => state);
 
   return useMutation({
-    mutationFn: (data: { username: string }) =>
+    mutationFn: (data: { email: string }) =>
       sendPasswordForgotRequest({
-        username: data.username,
+        email: data.email,
       }),
     onSuccess: (data) => {
       message.success(data.message);
@@ -221,12 +221,14 @@ export const useSendPasswordForgotRequest = () => {
 const createNewPassword = async (options: {
   resetToken: string;
   password: string;
+  confirmPassword: string;
 }) => {
   //call api
   const { data } = await axios.put(
     `/auth/resetpassword/${options.resetToken}`,
     {
       password: options.password,
+      confirmPassword: options.confirmPassword,
     }
   );
 
@@ -237,10 +239,11 @@ export const useCreateNewPassword = () => {
   const { setUser } = useUserStore((state) => state);
 
   return useMutation({
-    mutationFn: (data: { resetToken: string; password: string }) =>
+    mutationFn: (data: { resetToken: string; password: string, confirmPassword: string }) =>
       createNewPassword({
         resetToken: data.resetToken,
         password: data.password,
+        confirmPassword: data.confirmPassword,
       }),
     onError: (error) => {
       console.log(error);

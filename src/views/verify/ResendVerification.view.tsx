@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import styles from './ResendVerification.module.scss';
 import { Form, Input, Button } from 'antd';
@@ -6,15 +7,13 @@ import { useInterfaceStore } from '@/state/interface';
 import Loader from '@/components/loader/Loader.component';
 import InfoWrapper from '@/layout/infoWrapper/InfoWrapper.layout';
 import MainWrapper from '@/layout/mainWrapper/MainWrapper.layout';
-import { useRouter } from 'next/router';
-import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
 import useApiHook from '@/state/useApi';
 
 const ResendVerification = () => {
-  const router = useRouter();
+  const verifyCode = useSearchParams().get('verify');
   // pull out the verify token from the query params
-  const verifyCode = router.query.verify as string;
-  const [merchant, setMerchant] = React.useState<any>({});
+  // const verifyCode = router.query.verify as string;
   const { mutate: resendVerification, isLoading } =
     useResendVerificationEmail() as any;
   const { didSendEmail } = useInterfaceStore((state) => state);
@@ -26,9 +25,7 @@ const ResendVerification = () => {
   } = useApiHook({
     url: `/auth/verifyEmail?verify=${verifyCode}`,
     key: 'verifyEmail',
-    onSuccessCallback: (data) => {
-      setMerchant(data.payload);
-    },
+    onSuccessCallback: (data) => {},
     method: 'POST',
   }) as any;
 
@@ -51,52 +48,8 @@ const ResendVerification = () => {
       <div className={styles.auth}>
         <MainWrapper
           title="Congratulations! You're all set."
-          description="Someone from our team will reach out to you shortly to help you get started. In the meantime, feel free to explore our website and learn more about our services."
-        >
-          <div className={styles.successVerify}>
-            <h3 className={styles.successTitle}>
-              Welcome to Pyre{' '}
-              <span className={styles.businessName}>
-                {merchant.businessInfo.name}
-              </span>
-            </h3>
-            {/* image logo container for the merchant if they uploaded a logo */}
-            <div className={styles.logoContainer}>
-              <Image
-                src={merchant.businessInfo.logoUrl}
-                alt="Merchant logo"
-                className={styles.logo}
-                width={400}
-                height={200}
-              />
-            </div>
-            <div className={styles.descriptionContainer}>
-              <p className={styles.description}>
-                Someone from our team will reach out to you shortly to help you
-                get started. In the meantime, feel free to explore our website
-                and learn more about our services.
-              </p>
-              <p>
-                Meanwhile feel free to see your merchant services page!{' '}
-                <a
-                  href={`https://payment.pyreprocessing.com/service/nmi/${merchant.businessInfo.businessSlug}`}
-                  className={styles.merchantLink}
-                >
-                  {merchant.businessInfo.name}&apos;s services page
-                </a>{' '}
-                this page is specific to your account! while it doesnt have any
-                services yet, you can see the page and how it will look like
-                when you have services.
-              </p>
-              <Button
-                type="primary"
-                href={`https://payment.pyreprocessing.com/service/nmi/${merchant.businessInfo.businessSlug}`}
-              >
-                Go to your services page
-              </Button>
-            </div>
-          </div>{' '}
-        </MainWrapper>
+          description="You may login and start managing your account! If you have any questions, please feel free to reach out to us."
+        ></MainWrapper>
         <InfoWrapper links={['login']} />
       </div>
     );
@@ -117,11 +70,11 @@ const ResendVerification = () => {
         ) : !isLoading ? (
           <Form layout="vertical" className={styles.form} onFinish={onFinish}>
             <Form.Item
-              label="Email"
+              label="Email or Username"
               name="email"
               rules={[{ required: true, message: 'Please input your email' }]}
             >
-              <Input placeholder="Username" className={styles.input} />
+              <Input placeholder="" className={styles.input} />
             </Form.Item>
 
             <Button type="primary" htmlType="submit">
