@@ -98,7 +98,7 @@ const PhotoUpload = (props: Props) => {
             action={
               props.action
                 ? props.action
-                : 'https://api.pyreprocesing.com/api/v1/upload'
+                : `${process.env.NEXT_PUBLIC_API_URL}/upload`
             }
             headers={{
               Authorization: `Bearer ${localStorage.getItem('token')}`,
