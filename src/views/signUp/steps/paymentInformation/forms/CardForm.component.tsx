@@ -39,17 +39,17 @@ const CardForm = () => {
       className={styles.form}
       layout="vertical"
       initialValues={{
-        first_name: 'John',
-        last_name: 'Doe',
-        creditCardDetails: {
-          ccnumber: '4111111111111111',
-          ccexp: '10/25',
-          cvv: '123',
-        },
-        address1: '123 Main St',
-        address2: 'Apt 4',
-        zip: '12345',
-        city: 'New York',
+        // first_name: 'John',
+        // last_name: 'Doe',
+        // creditCardDetails: {
+          // ccnumber: '4111111111111111',
+          // ccexp: '10/25',
+          // cvv: '123',
+        // },
+        // address1: '123 Main St',
+        // address2: 'Apt 4',
+        // zip: '12345',
+        // city: 'New York',
       }}
     >
       <div className={styles.group}>
