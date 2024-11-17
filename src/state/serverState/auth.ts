@@ -21,6 +21,7 @@ const login = async (options: { email: string; password: string }) => {
 
 // Create a custom hook to fetch the user data
 export const useLogin = () => {
+  const { addError } = useInterfaceStore((state) => state);
   const { setToken, setUser } = useUserStore((state) => state);
   const router = useRouter();
   return useMutation({
@@ -42,6 +43,7 @@ export const useLogin = () => {
       ) {
         router.push('/resend-verification');
       }
+      addError({ message: error.response.data.message, type: 'error' });
       errorHandler(error);
     },
   });

@@ -9,29 +9,50 @@ import InfoWrapper from '@/layout/infoWrapper/InfoWrapper.layout';
 import MainWrapper from '@/layout/mainWrapper/MainWrapper.layout';
 import { useSearchParams } from 'next/navigation';
 import useApiHook from '@/state/useApi';
+import decryptData from '@/utils/decryptData';
+import { useUserStore } from '@/state/user';
+import { data } from 'framer-motion/client';
 
 const ResendVerification = () => {
   const verifyCode = useSearchParams().get('verify');
+  const [isVerifySuccess, setIsVerifySuccess] = React.useState(false);
   // pull out the verify token from the query params
   // const verifyCode = router.query.verify as string;
-  const { mutate: resendVerification, isLoading } =
-    useResendVerificationEmail() as any;
-  const { didSendEmail } = useInterfaceStore((state) => state);
-  const {
-    mutate: verifyEmail,
-    data: verifyData,
-    isLoading: verifyLoading,
-    isSuccess: isVerifySuccess,
-  } = useApiHook({
+  // const { mutate: resendVerification, isLoading } =
+  //   useResendVerificationEmail() as any;
+  const { mutate: resendVerification, isLoading } = useApiHook({
+    url: '/auth/resend-verification-email',
+    key: 'resendVerification',
+    method: 'POST',
+    onSuccessCallback: (data) => {
+      setDidSendEmail(true);
+      addError({
+        message: 'Verification email sent successfully',
+        type: 'success',
+      });
+    },
+  }) as any;
+
+  const { didSendEmail, addError, setDidSendEmail } = useInterfaceStore(
+    (state) => state
+  );
+  const { setUser } = useUserStore((state) => state);
+  const { mutate: verifyEmail, isLoading: verifyLoading } = useApiHook({
     url: `/auth/verifyEmail?verify=${verifyCode}`,
     key: 'verifyEmail',
-    onSuccessCallback: (data) => {},
+    enabled: !!verifyCode,
+    onSuccessCallback: (data) => {
+      setIsVerifySuccess(true);
+      // decrypt the data, and set the token
+      const results = decryptData(data.payload) as any;
+      setUser(results);
+    },
     method: 'POST',
   }) as any;
 
   const onFinish = async (values: any) => {
     resendVerification({
-      email: values.email,
+      formData: { email: values.email },
     });
   };
   React.useEffect(() => {
@@ -59,7 +80,7 @@ const ResendVerification = () => {
       <MainWrapper
         title="Let's get you verified"
         description="Please enter your email and we'll send you a link to verify your
-          Pyre account."
+          Shepherds account."
       >
         {didSendEmail ? (
           <div className={styles.resendSuccess}>

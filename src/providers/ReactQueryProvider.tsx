@@ -48,7 +48,7 @@ function ReactQueryProvider({ children }: React.PropsWithChildren) {
     <QueryClientProvider client={client}>
       <ConfigProvider theme={{ ...themeOverride }}>
         {children}
-        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+        <ReactQueryDevtools initialIsOpen={false} />
       </ConfigProvider>
     </QueryClientProvider>
   );
