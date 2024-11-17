@@ -1,12 +1,14 @@
-import React from "react";
-import styles from "./BusinessLogoUpload.module.scss";
-import { Form, Image, Input } from "antd";
-import PhotoUpload from "@/components/photoUpload/PhotoUpload.component";
-import { useInterfaceStore } from "@/state/interface";
+import React from 'react';
+import styles from './BusinessLogoUpload.module.scss';
+import { Form, Image, Input } from 'antd';
+import PhotoUpload from '@/components/photoUpload/PhotoUpload.component';
+import { useInterfaceStore } from '@/state/interface';
 
 const BusinessLogoUpload = () => {
   const [form] = Form.useForm();
-  const { signUpUserFormValues, setCurrentForm } = useInterfaceStore((state) => state);
+  const { signUpUserFormValues, setCurrentForm } = useInterfaceStore(
+    (state) => state
+  );
 
   React.useEffect(() => {
     form.setFieldsValue(signUpUserFormValues);
@@ -20,9 +22,9 @@ const BusinessLogoUpload = () => {
         <PhotoUpload
           form={form}
           action={
-            process.env.NODE_ENV === "production"
-              ? "https://api.shepherdcms.com/api/v1/upload/cloudinary"
-              : "http://localhost:5000/api/v1/upload/cloudinary"
+            process.env.NODE_ENV === 'production'
+              ? `${process.env.NEXT_PUBLIC_API_URL}/upload/cloudinary`
+              : 'http://localhost:5000/api/v1/upload/cloudinary'
           }
           aspectRatio={16 / 9}
           default={signUpUserFormValues?.ministryInfo?.ministryImageUrl}
