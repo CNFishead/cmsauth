@@ -22,17 +22,17 @@ const SideView = () => {
   const slides: Slide[] = [
     {
       id: 1,
-      title: <> </>,
+      title: <></>,
       subMessage: <></>,
       image:
-        'https://tse4.mm.bing.net/th?id=OIG2.pYHvOafBsN3WXXTlkyNz&pid=ImgGn',
+        'https://www.acstechnologies.com/church-growth/wp-content/uploads/sites/5/2024/05/Technology-Can-Assist-Pastors-1024x683.jpg',
     },
     {
       id: 2,
       title: <></>,
       subMessage: <></>,
       image:
-        'https://tse1.mm.bing.net/th?id=OIG3.X0E8xwvwLO2pai2Vgwln&pid=ImgGn',
+        'https://cdn.churchleaders.com/wp-content/uploads/2014/09/benefits-of-technology-in-church-640x427.jpg',
     },
   ];
 
@@ -57,9 +57,13 @@ const SideView = () => {
           key={currentSlide}
           className={styles.imageCarousel}
           style={{
-            background: `linear-gradient(65deg,
-          #23262a 0%,
-          rgba(20, 80, 163, .5) 100%), url(${slides[currentSlide].image})`,
+            // only show the image if slides.length is greater than 0
+            background:
+              slides.length > 0
+                ? `linear-gradient(65deg,
+            #23262a 0%,
+            rgba(20, 58, 163, 0.49) 100%), url(${slides[currentSlide]?.image})`
+                : '',
           }}
         ></motion.div>
       </AnimatePresence>
@@ -85,9 +89,9 @@ const SideView = () => {
           </div>
         )}
         <div className={styles.pyrecontainer}>
-          <h1 className={`${styles.message}`}>{slides[currentSlide].title}</h1>
+          <h1 className={`${styles.message}`}>{slides[currentSlide]?.title}</h1>
           <p className={`${styles.subMessage}`}>
-            {slides[currentSlide].subMessage}
+            {slides[currentSlide]?.subMessage}
           </p>
           <div className={styles.logoContainer}>
             <Image

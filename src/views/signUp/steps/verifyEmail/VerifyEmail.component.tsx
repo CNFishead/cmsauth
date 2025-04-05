@@ -4,8 +4,10 @@ import { FaEnvelope } from 'react-icons/fa';
 import { Button } from 'antd';
 import { useResendVerificationEmail } from '@/state/serverState/auth';
 import { useUserStore } from '@/state/user';
+import { useRouter } from 'next/navigation';
 
 const VerifyEmail = () => {
+  const router = useRouter();
   const { mutate: resendEmail } = useResendVerificationEmail();
   const { user } = useUserStore((state) => state);
 
@@ -28,7 +30,7 @@ const VerifyEmail = () => {
       <Button
         className={styles.button}
         onClick={() => {
-          resendEmail({ email: user.email });
+          router.push('/resend-verification');
         }}
       >
         Resend Verification Email

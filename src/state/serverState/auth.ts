@@ -98,7 +98,10 @@ const signUpPaid = async (options: {
   return data.user;
 };
 
-export const useSignUpPaid = () => {
+export const useSignUpPaid = (options: {
+  onSuccessCallback?: (user: any) => void;
+  onErrorCallback?: (error: any) => void;
+}) => {
   const { setUser } = useUserStore((state) => state);
   const {
     paymentMethod,
@@ -121,13 +124,13 @@ export const useSignUpPaid = () => {
         type: paymentMethod,
         partner: partner,
       }),
-    onSuccess: (user) => {
+    onSuccess: (user, _variables, context) => {
       message.success('Account created successfully');
-      setUser(user);
+      setUser(user); 
     },
     onError: (error) => {
       console.log(error);
-      errorHandler(error);
+      errorHandler(error); 
     },
   });
 };

@@ -50,7 +50,7 @@ const SignUpView = () => {
     (state) => state
   );
 
-  const { mutate: signUpPaid } = useSignUpPaid();
+  const { mutate: signUpPaid } = useSignUpPaid({});
   // const { data: merchantData } = useApiHook({
   //   url: `/partner/${partnerSlug}`,
   //   key: ['merchantData', partnerSlug!],
@@ -191,11 +191,11 @@ const SignUpView = () => {
                 </p>
                 <br />
                 <p>
-                  <strong>Automatic Free Trial Activation:</strong> Once you&apos;ve
-                  verified your email address and we have verified your account,
-                  you&apos;ll gain full access to your selected features for{' '}
-                  <strong>free</strong> for the first 14 days since creating
-                  your account.
+                  <strong>Automatic Free Trial Activation:</strong> Once
+                  you&apos;ve verified your email address and we have verified
+                  your account, you&apos;ll gain full access to your selected
+                  features for <strong>free</strong> for the first 14 days since
+                  creating your account.
                 </p>
                 <br />
                 <p>
@@ -216,8 +216,19 @@ const SignUpView = () => {
                     paymentMethod,
                   },
                 });
-                signUpPaid();
-                setRegisterMerchantLoading(false);
+                signUpPaid(undefined, {
+                  onSuccess: () => {
+                    setRegisterMerchantLoading(false);
+                    advanceToNextSignUpStep();
+                  },
+                  onError: (data: any) => {
+                    setRegisterMerchantLoading(false);
+                    addError({
+                      message: `There was an error creating your account. Please try again. ${data?.response?.data?.message}`,
+                      type: 'error',
+                    });
+                  },
+                });
               } else
                 addError({
                   message:
