@@ -104,30 +104,6 @@ const UserInformationForm = () => {
         <Input className={styles.input} placeholder="Enter your email address" />
       </Form.Item>
 
-      <Form.Item
-        name="username"
-        label="Username"
-        rules={[
-          {
-            required: true,
-            pattern: /^[a-zA-Z0-9]+$/,
-            message: "Username cannot contain spaces or special characters",
-          },
-          () => ({
-            async validator(_, value) {
-              if (value === "") return;
-              const { data } = await axios.get(`/auth/${value || " "}/username`);
-              if (data.exists === true) {
-                return Promise.reject("Username already exists");
-              }
-              return Promise.resolve();
-            },
-          }),
-        ]}
-      >
-        <Input className={styles.input} placeholder="Enter your username" />
-      </Form.Item>
-
       <div className={styles.group}>
         <Form.Item
           name="password"

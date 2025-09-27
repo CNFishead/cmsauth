@@ -125,88 +125,39 @@ const SignUpView = () => {
         hideBackButton: false,
         nextButtonAction: () => {
           Modal.confirm({
-            title: 'Public View Notice',
+            title: 'Confirm Intent to Create Account',
+            width: '50%',
             content: (
-              <p>
-                This information will be visible to the public, are you sure you
-                want to continue?
-              </p>
-            ),
-            onOk() {
-              setSignUpUserFormValues({
-                ...signUpUserFormValues,
-                ministryInfo: {
-                  ...signUpUserFormValues.ministryInfo,
-                  ...currentForm.getFieldsValue(),
-                },
-              });
-              advanceToNextSignUpStep();
-            },
-          });
-        },
-      },
-      3: {
-        id: 1,
-        title: 'Features',
-        component: <FeatureChoose />,
-        nextButtonText: 'Next',
-        headerText: 'Features',
-        subHeaderText:
-          'Choose what matters to your church! You can always change this later.',
-        icon: <CgProfile />,
-        nextButtonDisabled: false,
-        hideBackButton: false,
-        nextButtonAction: () => {
-          if (features.length > 0) {
-            advanceToNextSignUpStep();
-          } else {
-            addError({
-              message: 'Please select at least one feature',
-              type: 'error',
-            });
-          }
-        },
-      },
-      4: {
-        id: 1,
-        title: 'Payment information',
-        component: <PaymentInformation />,
-        nextButtonText: 'Next',
-        headerText: 'Credit Card Information',
-        subHeaderText:
-          'At the current time, we only accept credit card payments. Please fill out the form below.',
-        icon: <CgProfile />,
-        nextButtonDisabled: false,
-        hideBackButton: false,
-        nextButtonAction: () => {
-          Modal.confirm({
-            title: '14-day Free Trial Information',
-            content: (
-              <div className={'free-trial-modal'}>
-                <p>
-                  <strong>Nominal Authorization Charge:</strong> To ensure a
-                  smooth trial initiation, we will authenticate the card details
-                  you provide, this may result in a nominal charge of $1.00.
-                  This charge will be voided and refunded
+              <div className={styles.modalContent}>
+                <p className={`${styles.modalParagraph} ${styles.highlight}`}>
+                  By clicking "OK" you confirm that you are creating this
+                  account for a real ministry and not for personal use. You also
+                  confirm that you have the authority to create this account on
+                  behalf of this ministry.
                 </p>
-                <br />
-                <p>
-                  <strong>Automatic Free Trial Activation:</strong> Once
-                  you&apos;ve verified your email address and we have verified
-                  your account, you&apos;ll gain full access to your selected
-                  features for <strong>free</strong> for the first 14 days since
-                  creating your account.
+                <p className={styles.modalParagraph}>
+                  Please note that you will not be able to use this account
+                  until you have completed the verification steps.
                 </p>
-                <br />
-                <p>
-                  <strong>Cancel anytime:</strong> You can cancel at any time
-                  during this period and you will not be charged. If you do not
-                  cancel, your payment method will be automatically charged at
-                  the end of the trial period.
+                <p className={styles.modalParagraph}>
+                  Once you sign-in you will be prompted to complete the
+                  onboarding process, including selecting the features you would
+                  like to use and entering your payment information.
+                </p>
+                <p className={styles.modalParagraph}>
+                  You will not be charged until the end of your free 14-day
+                  trial.
+                </p>
+                <p className={`${styles.modalParagraph} ${styles.warning}`}>
+                  Failure to complete the verification steps may result in your
+                  account being suspended or deleted.
+                </p>
+                <p className={styles.contactInfo}>
+                  If you have any questions, please contact support at:
+                  support@shepherdcms.com
                 </p>
               </div>
             ),
-            okText: 'Agree and Register',
             onOk: () => {
               if (recapchaIsVerified) {
                 setRegisterMerchantLoading(true);
@@ -214,6 +165,13 @@ const SignUpView = () => {
                   billingDetails: {
                     ...currentForm.getFieldsValue(),
                     paymentMethod,
+                  },
+                });
+                setSignUpUserFormValues({
+                  ...signUpUserFormValues,
+                  ministryInfo: {
+                    ...signUpUserFormValues.ministryInfo,
+                    ...currentForm.getFieldsValue(),
                   },
                 });
                 signUpPaid(undefined, {
@@ -239,7 +197,7 @@ const SignUpView = () => {
           });
         },
       },
-      5: {
+      3: {
         id: 1,
         isHiddenOnSteps: true,
         component: <VerifySteps />,
@@ -253,7 +211,7 @@ const SignUpView = () => {
           advanceToNextSignUpStep();
         },
       },
-      6: {
+      4: {
         id: 1,
         title: 'Verification',
         isHiddenOnSteps: false,

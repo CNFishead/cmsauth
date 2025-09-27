@@ -1,4 +1,4 @@
-@use "@/styles/globals.scss" as *;
+@use '@/styles/globals.scss' as *;
 
 .wrapper {
   // max-height: 99dvh;
@@ -31,5 +31,43 @@
     flex-direction: column-reverse;
     justify-content: center;
     width: 100%;
+  }
+}
+
+.modalContent {
+  .modalParagraph {
+    margin-bottom: 16px;
+    line-height: 1.6;
+    color: rgba(0, 0, 0, 0.85);
+    font-size: 14px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    &.highlight {
+      padding: 12px 16px;
+      background-color: #f6f8fa;
+      border-left: 4px solid $primary-color;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    &.warning {
+      padding: 12px 16px;
+      background-color: #fff7e6;
+      border-left: 4px solid #fa8c16;
+      border-radius: 4px;
+      color: #d46b08;
+    }
+  }
+
+  .contactInfo {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #f0f0f0;
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.65);
+    text-align: center;
   }
 }
