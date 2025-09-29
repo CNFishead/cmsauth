@@ -130,7 +130,7 @@ const SignUpView = () => {
             content: (
               <div className={styles.modalContent}>
                 <p className={`${styles.modalParagraph} ${styles.highlight}`}>
-                  By clicking "OK" you confirm that you are creating this
+                  By clicking &quot;OK&quot; you confirm that you are creating this
                   account for a real ministry and not for personal use. You also
                   confirm that you have the authority to create this account on
                   behalf of this ministry.

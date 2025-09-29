@@ -15,7 +15,7 @@ const login = async (options: { email: string; password: string }) => {
     password: options.password,
   });
   //get token
-  const user = data.user;
+  const user = data.payload;
   return user;
 };
 
@@ -31,6 +31,7 @@ export const useLogin = () => {
         password: data.password,
       }),
     onSuccess: (user: any) => {
+      console.log(user);
       //set token to local storage
       setUser(user);
     },
@@ -126,11 +127,11 @@ export const useSignUpPaid = (options: {
       }),
     onSuccess: (user, _variables, context) => {
       message.success('Account created successfully');
-      setUser(user); 
+      setUser(user);
     },
     onError: (error) => {
       console.log(error);
-      errorHandler(error); 
+      errorHandler(error);
     },
   });
 };
