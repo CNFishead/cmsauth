@@ -1,26 +1,16 @@
 'use client';
 import styles from './SignUp.module.scss';
-import { Button, Empty, Modal } from 'antd';
-import { BsBox } from 'react-icons/bs';
+import { Button, Empty } from 'antd';
 import { useInterfaceStore } from '@/state/interface';
-import UserInformationForm from './steps/userInformation/UserInformationForm.component';
-import { AiOutlineCheckCircle, AiOutlineUser } from 'react-icons/ai';
 import { AnimatePresence, motion } from 'framer-motion';
-import ProfileInformationForm from './steps/profileInformation/ProfileInformationForm.component';
 import Loader from '@/components/loader/Loader.component';
-import VerifySteps from './steps/verifySteps/VerifySteps.component';
-import VerifyEmail from './steps/verifyEmail/VerifyEmail.component';
 import MainWrapper from '@/layout/mainWrapper/MainWrapper.layout';
 import InfoWrapper from '@/layout/infoWrapper/InfoWrapper.layout';
 import { validateForm } from '@/utils/validateForm';
-import { encryptData } from '@/utils/encryptData';
 import { usePartnerStore } from '@/state/partner';
-import React, { useEffect, useState } from 'react';
-import useApiHook from '@/state/useApi';
-import BusinessLogoUpload from './steps/businessLogoUpload/BusinessLogoUpload.form';
-import { CgProfile } from 'react-icons/cg';
-import FeatureChoose from './steps/featureChoose/FeatureChoose.component';
-import PaymentInformation from './steps/paymentInformation/PaymentInformation.component';
+import { useQueryParamsStore } from '@/state/queryParams';
+import { SignUpStepBuilder, StepBuilderConfig } from './SignUpStepBuilder';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useSignUpPaid } from '@/state/serverState/auth';
 
 const SignUpView = () => {
@@ -49,182 +39,69 @@ const SignUpView = () => {
   const { partner: partnerSlug, setBranding } = usePartnerStore(
     (state) => state
   );
+  const { getParam } = useQueryParamsStore((state) => state);
 
   const { mutate: signUpPaid } = useSignUpPaid({});
+
+  // Check if this is an invite signup (token present)
+  // When a token is present in URL params (?token=abc123), it means this is an invite signup
+  // and the user should skip ministry setup since they're joining an existing ministry
+  const isInviteSignup = Boolean(getParam('token'));
+
+  // Debug logging
+  React.useEffect(() => {
+    console.log('SignUp Flow Mode:', isInviteSignup ? 'INVITE' : 'REGULAR');
+    console.log('Token present:', getParam('token'));
+  }, [isInviteSignup, getParam]);
   // const { data: merchantData } = useApiHook({
   //   url: `/partner/${partnerSlug}`,
   //   key: ['merchantData', partnerSlug!],
   //   method: 'GET',
   // }) as any;
 
+  // Create the step builder configuration
+  const stepBuilderConfig: StepBuilderConfig = useMemo(
+    () => ({
+      validateForm,
+      addError,
+      setSignUpUserFormValues,
+      setSignUpPaymentFormValues,
+      signUpUserFormValues,
+      currentForm,
+      recapchaIsVerified,
+      setRegisterMerchantLoading,
+      signUpPaid,
+      paymentMethod,
+      advanceToNextSignUpStep,
+      styles,
+    }),
+    [
+      validateForm,
+      addError,
+      setSignUpUserFormValues,
+      setSignUpPaymentFormValues,
+      signUpUserFormValues,
+      currentForm,
+      recapchaIsVerified,
+      setRegisterMerchantLoading,
+      signUpPaid,
+      paymentMethod,
+      advanceToNextSignUpStep,
+      styles,
+    ]
+  );
+
+  // Create and use the step builder
+  const stepBuilder = useMemo(
+    () => new SignUpStepBuilder(stepBuilderConfig),
+    [stepBuilderConfig]
+  );
+
   React.useEffect(() => {
-    setSteps({
-      0: {
-        id: 0,
-        title: 'User Info',
-        component: <UserInformationForm />,
-        nextButtonText: 'Next',
-        headerText: "We're excited to have you!",
-        subHeaderText:
-          'Please fill out the form below to get started. This information is all about you, the account user!',
-        nextButtonDisabled: false,
-        hideBackButton: true,
-        icon: <AiOutlineUser />,
-        nextButtonAction: async () => {
-          if (await validateForm(currentForm)) {
-            setSignUpUserFormValues({
-              ...signUpUserFormValues,
-              userInfo: currentForm.getFieldsValue(),
-            });
-            advanceToNextSignUpStep();
-          } else {
-            addError({
-              message: 'Please complete the form before continuing',
-              type: 'error',
-            });
-          }
-        },
-      },
-      1: {
-        id: 1,
-        title: 'Ministry Info',
-        component: <ProfileInformationForm />,
-        nextButtonText: 'Next',
-        headerText: 'Ministry Information',
-        subHeaderText:
-          "This is the main ministry, you'll be able to create sub-ministries later on.",
-        icon: <BsBox />,
-        nextButtonDisabled: false,
-        hideBackButton: false,
-        nextButtonAction: async () => {
-          if (await validateForm(currentForm)) {
-            setSignUpUserFormValues({
-              ...signUpUserFormValues,
-              ministryInfo: currentForm.getFieldsValue(),
-            });
-            advanceToNextSignUpStep();
-          } else {
-            addError({
-              message: 'Please complete the form before continuing',
-              type: 'error',
-            });
-          }
-        },
-      },
-      2: {
-        id: 1,
-        title: 'Ministry banner',
-        component: <BusinessLogoUpload />,
-        nextButtonText: 'Next',
-        headerText: 'Ministry Banner',
-        isHiddenOnSteps: true,
-        subHeaderText:
-          'Upload a banner for your ministry. This will be displayed to your congregation when checking in.',
-        icon: <CgProfile />,
-        nextButtonDisabled: false,
-        hideBackButton: false,
-        nextButtonAction: () => {
-          Modal.confirm({
-            title: 'Confirm Intent to Create Account',
-            width: '50%',
-            content: (
-              <div className={styles.modalContent}>
-                <p className={`${styles.modalParagraph} ${styles.highlight}`}>
-                  By clicking &quot;OK&quot; you confirm that you are creating this
-                  account for a real ministry and not for personal use. You also
-                  confirm that you have the authority to create this account on
-                  behalf of this ministry.
-                </p>
-                <p className={styles.modalParagraph}>
-                  Please note that you will not be able to use this account
-                  until you have completed the verification steps.
-                </p>
-                <p className={styles.modalParagraph}>
-                  Once you sign-in you will be prompted to complete the
-                  onboarding process, including selecting the features you would
-                  like to use and entering your payment information.
-                </p>
-                <p className={styles.modalParagraph}>
-                  You will not be charged until the end of your free 14-day
-                  trial.
-                </p>
-                <p className={`${styles.modalParagraph} ${styles.warning}`}>
-                  Failure to complete the verification steps may result in your
-                  account being suspended or deleted.
-                </p>
-                <p className={styles.contactInfo}>
-                  If you have any questions, please contact support at:
-                  support@shepherdcms.com
-                </p>
-              </div>
-            ),
-            onOk: () => {
-              if (recapchaIsVerified) {
-                setRegisterMerchantLoading(true);
-                setSignUpPaymentFormValues({
-                  billingDetails: {
-                    ...currentForm.getFieldsValue(),
-                    paymentMethod,
-                  },
-                });
-                setSignUpUserFormValues({
-                  ...signUpUserFormValues,
-                  ministryInfo: {
-                    ...signUpUserFormValues.ministryInfo,
-                    ...currentForm.getFieldsValue(),
-                  },
-                });
-                signUpPaid(undefined, {
-                  onSuccess: () => {
-                    setRegisterMerchantLoading(false);
-                    advanceToNextSignUpStep();
-                  },
-                  onError: (data: any) => {
-                    setRegisterMerchantLoading(false);
-                    addError({
-                      message: `There was an error creating your account. Please try again. ${data?.response?.data?.message}`,
-                      type: 'error',
-                    });
-                  },
-                });
-              } else
-                addError({
-                  message:
-                    "We couldn't verify that you are a human. Please try again.",
-                  type: 'error',
-                });
-            },
-          });
-        },
-      },
-      3: {
-        id: 1,
-        isHiddenOnSteps: true,
-        component: <VerifySteps />,
-        nextButtonText: 'Send Verification Email',
-        headerText: 'Next Steps',
-        subHeaderText:
-          'There are a few verifications steps needed before you can start using your account.',
-        nextButtonDisabled: false,
-        hideBackButton: false,
-        nextButtonAction: () => {
-          advanceToNextSignUpStep();
-        },
-      },
-      4: {
-        id: 1,
-        title: 'Verification',
-        isHiddenOnSteps: false,
-        component: <VerifyEmail />,
-        headerText: 'Verification Email Sent',
-        subHeaderText:
-          'Please check your email to verify your account to start your free 14-day trial.',
-        icon: <AiOutlineCheckCircle />,
-        hideBackButton: true,
-        hideNextButton: true,
-      },
-    });
-  }, [currentSignUpStep, currentForm, features]);
+    console.log('Setting up steps with builder. Invite mode:', isInviteSignup);
+    const stepsConfig = stepBuilder.getStepsConfig(isInviteSignup);
+    setSteps(stepsConfig);
+  }, [isInviteSignup, stepBuilder, setSteps]);
 
   // useEffect(() => {
   //   // set the partner in the partner store

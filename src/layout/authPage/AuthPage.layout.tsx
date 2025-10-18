@@ -1,15 +1,16 @@
-"use client";
-import styles from "./AuthPage.module.scss";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
-import { useUserStore } from "@/state/user";
-import Loader from "@/components/loader/Loader.component";
-import { Modal } from "antd";
-import { useInterfaceStore } from "@/state/interface";
-import { usePartnerStore } from "@/state/partner";
-import SideView from "@/layout/sideView/SideView.layout";
-import ShoppingCart from "@/components/shoppingCart/ShoppingCart.component";
-import { useRecapcha } from "@/utils/useRecapcha";
+'use client';
+import styles from './AuthPage.module.scss';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
+import { useUserStore } from '@/state/user';
+import Loader from '@/components/loader/Loader.component';
+import { Modal } from 'antd';
+import { useInterfaceStore } from '@/state/interface';
+import { usePartnerStore } from '@/state/partner';
+import SideView from '@/layout/sideView/SideView.layout';
+import ShoppingCart from '@/components/shoppingCart/ShoppingCart.component';
+import { useRecapcha } from '@/utils/useRecapcha';
+import { useQueryParamsStore } from '@/state/queryParams';
 
 type Props = {
   children: React.ReactNode;
@@ -18,14 +19,30 @@ type Props = {
 const AuthPage = (props: Props) => {
   const router = useRouter();
   const { user, logout } = useUserStore((state) => state);
-  const { setRedirectName, redirectName, setCurrentSignUpStep, setRedirectUrl, redirectUrl } = useInterfaceStore(
+  const {
+    setRedirectName,
+    redirectName,
+    setCurrentSignUpStep,
+    setRedirectUrl,
+    redirectUrl,
+  } = useInterfaceStore((state) => state);
+  const { setPartner } = usePartnerStore((state) => state);
+  const { loadFromUrlParams, getParam, params } = useQueryParamsStore(
     (state) => state
   );
-  const { setPartner } = usePartnerStore((state) => state);
   const searchParams = useSearchParams();
-  const redirect = searchParams.get("redirect") as string;
-  const shouldLogout = searchParams.get("logout") === "true";
-  const partner = searchParams.get("partnerslug") as string;
+  console.log(params);
+
+  // Load all query parameters into the store automatically
+  // This captures any query params like: ?token=abc123&partner=partner-id&redirect=/dashboard&newParam1=value
+  useEffect(() => {
+    loadFromUrlParams(searchParams);
+  }, [searchParams, loadFromUrlParams]);
+
+  // Get parameters from the store
+  const redirect = getParam('redirect');
+  const shouldLogout = getParam('logout') === 'true';
+  const partner = getParam('partnerslug') || getParam('partner');
 
   useRecapcha();
 
@@ -44,46 +61,64 @@ const AuthPage = (props: Props) => {
       if (redirect) {
         setRedirectUrl(redirect);
         setRedirectName(
-          redirect?.split(/[/.]/)[2][0].toUpperCase() + redirect?.split(/[/.]/)[2].slice(1).toLowerCase()
+          redirect?.split(/[/.]/)[2][0].toUpperCase() +
+            redirect?.split(/[/.]/)[2].slice(1).toLowerCase()
         );
       }
       if (redirectUrl) {
         setRedirectName(
-          redirectUrl?.split(/[/.]/)[2][0].toUpperCase() + redirectUrl?.split(/[/.]/)[2].slice(1).toLowerCase()
+          redirectUrl?.split(/[/.]/)[2][0].toUpperCase() +
+            redirectUrl?.split(/[/.]/)[2].slice(1).toLowerCase()
         );
       }
     } catch {
-      setRedirectName("");
+      setRedirectName('');
     }
-  }, [router, redirect, redirectUrl]);
+  }, [
+    shouldLogout,
+    redirect,
+    redirectUrl,
+    logout,
+    setRedirectUrl,
+    setRedirectName,
+  ]);
 
   useEffect(() => {
-    // if (!router.isReady) return;
-
-    if (partner) {
-      setPartner(partner);
-    }
-
     if (user) {
       if (!user.isEmailVerified) {
         setCurrentSignUpStep(5);
-        router.push("/signup");
+        router.push('/signup');
         return;
       }
 
       if (redirect) return performRedirect(redirect + `?token=${user.token}`);
 
       performRedirect(
-        process.env.ENV === "development"
-          ? `http://localhost:3000/home${user ? `?token=${user.token}` : ""}`
-          : `https://portal.shepherdcms.org/home${user ? `?token=${user.token}` : ""}`
+        process.env.ENV === 'development'
+          ? `http://localhost:3000/home${user ? `?token=${user.token}` : ''}`
+          : `https://portal.shepherdcms.org/home${
+              user ? `?token=${user.token}` : ''
+            }`
       );
     }
-  }, [user, redirect, partner]);
+  }, [
+    user,
+    partner,
+    setPartner,
+    setCurrentSignUpStep,
+    router,
+    performRedirect,
+  ]);
 
   return (
     <div className={styles.wrapper}>
-      <Modal open={user && user.isEmailVerified} centered footer={null} closable={false} maskClosable={false}>
+      <Modal
+        open={user && user.isEmailVerified}
+        centered
+        footer={null}
+        closable={false}
+        maskClosable={false}
+      >
         <div className={styles.redirectModal}>
           <Loader />
           <h4>

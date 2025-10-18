@@ -7,6 +7,7 @@ import { message } from 'antd';
 import { useInterfaceStore } from '../interface';
 import { useRouter } from 'next/navigation';
 import { usePartnerStore } from '../partner';
+import { useQueryParamsStore } from '../queryParams';
 
 const login = async (options: { email: string; password: string }) => {
   //call api
@@ -86,14 +87,11 @@ export const useSignUpFree = () => {
 
 const signUpPaid = async (options: {
   registrationData: object;
-  features: any;
-  type: 'ach' | 'card';
-  partner: string | undefined;
 }) => {
   const { data } = await axios.post(
-    `/auth/register?partnerid=${options.partner ? options.partner : ''}`,
+    `/auth/register`,
 
-    { ...options.registrationData, features: options.features }
+    { ...options.registrationData }
   );
 
   return data.user;
@@ -112,6 +110,7 @@ export const useSignUpPaid = (options: {
     signUpProfileFormValues,
   } = useInterfaceStore((state) => state);
   const { partner } = usePartnerStore((state) => state);
+  const { params } = useQueryParamsStore((state) => state);
 
   return useMutation({
     mutationFn: () =>
@@ -120,10 +119,8 @@ export const useSignUpPaid = (options: {
           ...signUpUserFormValues,
           ...{ profile: signUpProfileFormValues },
           ...signUpPaymentFormValues,
+          token: params.token,
         },
-        features: features,
-        type: paymentMethod,
-        partner: partner,
       }),
     onSuccess: (user, _variables, context) => {
       message.success('Account created successfully');
