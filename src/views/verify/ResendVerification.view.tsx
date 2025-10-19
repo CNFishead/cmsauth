@@ -57,7 +57,7 @@ const ResendVerification = () => {
   };
   React.useEffect(() => {
     if (verifyCode) {
-      verifyEmail({ code: verifyCode });
+      verifyEmail({ formData: { token: verifyCode } });
     }
   }, [verifyCode]);
 
