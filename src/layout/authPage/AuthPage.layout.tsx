@@ -30,13 +30,13 @@ const AuthPage = (props: Props) => {
   const { loadFromUrlParams, getParam, params } = useQueryParamsStore(
     (state) => state
   );
-  const searchParams = useSearchParams(); 
+  const searchParams = useSearchParams();
 
   // Load all query parameters into the store automatically
   // This captures any query params like: ?token=abc123&partner=partner-id&redirect=/dashboard&newParam1=value
   useEffect(() => {
     loadFromUrlParams(searchParams);
-  }, [searchParams, loadFromUrlParams]);
+  }, [searchParams]);
 
   // Get parameters from the store
   const redirect = getParam('redirect');
@@ -63,8 +63,7 @@ const AuthPage = (props: Props) => {
           redirect?.split(/[/.]/)[2][0].toUpperCase() +
             redirect?.split(/[/.]/)[2].slice(1).toLowerCase()
         );
-      }
-      if (redirectUrl) {
+      } else if (redirectUrl) {
         setRedirectName(
           redirectUrl?.split(/[/.]/)[2][0].toUpperCase() +
             redirectUrl?.split(/[/.]/)[2].slice(1).toLowerCase()
@@ -73,14 +72,7 @@ const AuthPage = (props: Props) => {
     } catch {
       setRedirectName('');
     }
-  }, [
-    shouldLogout,
-    redirect,
-    redirectUrl,
-    logout,
-    setRedirectUrl,
-    setRedirectName,
-  ]);
+  }, [shouldLogout, redirect]);
 
   useEffect(() => {
     if (user) {
@@ -100,14 +92,7 @@ const AuthPage = (props: Props) => {
             }`
       );
     }
-  }, [
-    user,
-    partner,
-    setPartner,
-    setCurrentSignUpStep,
-    router,
-    performRedirect,
-  ]);
+  }, [user, partner, router]);
 
   return (
     <div className={styles.wrapper}>
