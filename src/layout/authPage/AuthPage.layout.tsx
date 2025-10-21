@@ -30,8 +30,7 @@ const AuthPage = (props: Props) => {
   const { loadFromUrlParams, getParam, params } = useQueryParamsStore(
     (state) => state
   );
-  const searchParams = useSearchParams();
-  console.log(params);
+  const searchParams = useSearchParams(); 
 
   // Load all query parameters into the store automatically
   // This captures any query params like: ?token=abc123&partner=partner-id&redirect=/dashboard&newParam1=value
