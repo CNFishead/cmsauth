@@ -61,8 +61,7 @@ const AuthPage = (props: Props) => {
   useEffect(() => {
     if (user) {
       if (!user.isEmailVerified) {
-        setCurrentSignUpStep(5);
-        router.push('/signup');
+        router.push('/resend-verification');
         return;
       }
 

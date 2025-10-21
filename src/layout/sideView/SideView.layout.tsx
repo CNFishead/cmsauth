@@ -95,9 +95,7 @@ const SideView = () => {
           </p>
           <div className={styles.logoContainer}>
             <Image
-              src={
-                'https://res.cloudinary.com/wulfdev/image/upload/v1730653004/ShepherdsCMSLogo_sbkr3b.png'
-              }
+              src={'/images/ShepherdsCMSLogo.png'}
               width={200}
               height={200}
               style={{
