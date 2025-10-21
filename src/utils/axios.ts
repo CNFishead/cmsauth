@@ -7,10 +7,7 @@ import axios from 'axios';
  * @possible       
  */
 export default axios.create({
-  baseURL:
-    process.env.NODE_ENV === 'production'
-      ? process.env.NEXT_PUBLIC_API_URL
-      : 'http://localhost:5000/api/v1',
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
   headers: {
     'Content-type': 'application/json',
   },

@@ -5,19 +5,21 @@ import { useLogin } from '@/state/serverState/auth';
 import { useInterfaceStore } from '@/state/interface';
 import InfoWrapper from '@/layout/infoWrapper/InfoWrapper.layout';
 import MainWrapper from '@/layout/mainWrapper/MainWrapper.layout';
-import {  useSearchParams } from 'next/navigation';
+import { useQueryParamsStore } from '@/state/queryParams';
 
-const SignInView = () => {   
-  // check for the redirect query param
-  const searchParams = useSearchParams();
-  const redirect = searchParams.get('redirect');
+const SignInView = () => {
+  const { getParam, setParam } = useQueryParamsStore((state) => state);
+
+  // Get redirect and logout from query params store
+  const redirect = getParam('redirect');
+  const logout = getParam('logout');
 
   const { mutate: login } = useLogin();
-  const { redirectName, recapchaIsVerified, setRedirectName, setRedirectUrl } =
-    useInterfaceStore((state) => state);
+  const { redirectName, recapchaIsVerified } = useInterfaceStore(
+    (state) => state
+  );
 
   const onFinish = async (values: any) => {
-    const logout = searchParams.get('logout') === 'true';
     if (recapchaIsVerified) {
       login({
         email: values.email,
@@ -41,13 +43,12 @@ const SignInView = () => {
           <div className={styles.signinCardsContainer}>
             <Card
               className={styles.card}
-              onClick={() =>
-                setRedirectUrl(
-                  process.env.NODE_ENV === 'production'
-                    ? 'https://portal.shepherdcms.org'
-                    : 'http://localhost:3000'
-                )
-              }
+              onClick={() => {
+                const portalUrl = process.env.NEXT_PUBLIC_PORTAL_URL || '';
+                if (portalUrl) {
+                  setParam('redirect', portalUrl);
+                }
+              }}
             >
               Church Sign-In
             </Card>

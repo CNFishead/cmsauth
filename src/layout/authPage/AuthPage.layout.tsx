@@ -9,8 +9,9 @@ import { useInterfaceStore } from '@/state/interface';
 import { usePartnerStore } from '@/state/partner';
 import SideView from '@/layout/sideView/SideView.layout';
 import ShoppingCart from '@/components/shoppingCart/ShoppingCart.component';
-import { useRecapcha } from '@/utils/useRecapcha';
+import { useRecapcha } from '@/hooks/useRecapcha';
 import { useQueryParamsStore } from '@/state/queryParams';
+import { getRedirectName } from '@/layout/authPage/getRedirectName';
 
 type Props = {
   children: React.ReactNode;
@@ -19,17 +20,10 @@ type Props = {
 const AuthPage = (props: Props) => {
   const router = useRouter();
   const { user, logout } = useUserStore((state) => state);
-  const {
-    setRedirectName,
-    redirectName,
-    setCurrentSignUpStep,
-    setRedirectUrl,
-    redirectUrl,
-  } = useInterfaceStore((state) => state);
+  const { setRedirectName, redirectName, setCurrentSignUpStep } =
+    useInterfaceStore((state) => state);
   const { setPartner } = usePartnerStore((state) => state);
-  const { loadFromUrlParams, getParam, params } = useQueryParamsStore(
-    (state) => state
-  );
+  const { loadFromUrlParams, getParam } = useQueryParamsStore((state) => state);
   const searchParams = useSearchParams();
 
   // Load all query parameters into the store automatically
@@ -53,26 +47,16 @@ const AuthPage = (props: Props) => {
     logout();
   };
 
+  // Set redirect name based on redirect param
   useEffect(() => {
-    if (shouldLogout) logout();
-
-    try {
-      if (redirect) {
-        setRedirectUrl(redirect);
-        setRedirectName(
-          redirect?.split(/[/.]/)[2][0].toUpperCase() +
-            redirect?.split(/[/.]/)[2].slice(1).toLowerCase()
-        );
-      } else if (redirectUrl) {
-        setRedirectName(
-          redirectUrl?.split(/[/.]/)[2][0].toUpperCase() +
-            redirectUrl?.split(/[/.]/)[2].slice(1).toLowerCase()
-        );
-      }
-    } catch {
+    if (redirect) {
+      const name = getRedirectName(redirect);
+      console.log(name);
+      setRedirectName(name);
+    } else {
       setRedirectName('');
     }
-  }, [shouldLogout, redirect]);
+  }, [redirect, setRedirectName]);
 
   useEffect(() => {
     if (user) {
@@ -85,11 +69,8 @@ const AuthPage = (props: Props) => {
       if (redirect) return performRedirect(redirect + `?token=${user.token}`);
 
       performRedirect(
-        process.env.ENV === 'development'
-          ? `http://localhost:3000/home${user ? `?token=${user.token}` : ''}`
-          : `https://portal.shepherdcms.org/home${
-              user ? `?token=${user.token}` : ''
-            }`
+        process.env.NEXT_PUBLIC_PORTAL_URL +
+          (user ? `/home?token=${user.token}` : '')
       );
     }
   }, [user, partner, router]);
@@ -119,7 +100,7 @@ const AuthPage = (props: Props) => {
         </div>
 
         <div className={styles.auth}>
-          <div className={styles.banner}>{redirectName}</div>
+          {redirectName && <div className={styles.banner}>{redirectName}</div>}
           <div className={styles.childrenContainer}>{props.children}</div>
         </div>
       </div>

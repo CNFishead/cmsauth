@@ -2,7 +2,8 @@
 const nextConfig = {
   /* config options here */
   env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    NEXT_PUBLIC_API_URL: process.env.API_URL,
+    NEXT_PUBLIC_PORTAL_URL: process.env.PORTAL_URL,
     NEXT_PUBLIC_ENCRYPTION_KEY: process.env.NEXT_PUBLIC_ENCRYPTION_KEY,
     ENV: process.env.NODE_ENV,
   },
